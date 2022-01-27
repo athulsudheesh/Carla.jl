@@ -3,6 +3,9 @@ uuid = "cd055636-c971-4d1b-b455-aa969f19e596"
 authors = ["Athul Sudheesh", "Richard M. Golden"]
 version = "0.1.0"
 
+[deps]
+CDMrdata = "60f1a76e-720d-4784-bbc6-074b7a9a39a5"
+
 [compat]
 julia = "1.7"
 
