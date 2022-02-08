@@ -1,0 +1,1 @@
+- Sum and function call is the expectation step (always getcompletegradientalpha)

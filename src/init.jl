@@ -1,103 +1,181 @@
 # This file contains the functions for initializing parameters 
 
-function algo_params_init()
-    maxnr_samples = 50
+# modelcons_init is similar to setmodelconstants in MatlabCarla
+# with the exception that data-specific constants are obtained using the 
+# extract(X_df, Q_df, R) function defined in src/datahandling.jl  
+"""
+    modelcons_init()
+
+Initializes probability model constants. If no arguments are passed default values will be used. 
+
+# Optional Arguments:
+- estimatebeta: Boolean type; default `true`  
+- estimatedelta: Boolean type; default `false` 
+- ψ: A ResponseFunction type (e.g.  DINA(), DINO(), FUZZYDINA()); default `DINA()`
+- ϕ: A ResponseFunction type (e.g.  DINA(), DINO(), FUZZYDINA()); default `DINA()`
+- forceblockdiagonal: Boolean type;  If true forces the off-diagonal submatrices of the B matrix equal to 0; default `true`
+- std: Floating point number; std.dev. additive noise to initial parameters; default `0.0` 
+- variance: parameter for gaussian model prior; default `400/536` 
+- wt_vec: weight vector; default `[0,0]` 
+"""
+function modelcons_init(;
+    estimateβ = true,
+    estimateδ = false,
+    ψ = DINA(),
+    ϕ = DINA(),
+    forceblockdiagonal = true,
+    std = 0.0,
+    variance = 400 / 536,
+    wt_vec = [0, 0],
+)
+
     return (
-        pval = 0.05,
-        missingdataintegral = ExactmissingSerial(), # exactmissing_serial is a subtype of estimation (Ref. src/init.jl)
-        OMCmaxnr_samples = maxnr_samples, # Maximum no. of Monte Carlo samples to be generated 
-        OMCtemperature = 0.25, # Sampling temperature for importance sampling (+ve number)
-        # OMCtemp = 1 (regular); temp = 0.0001 (high probability states); temp = 5 (low probability states)
-        # temp = 100000000 (almost true random sampling)
-        OMCsamplingerror = 0.01,
-        OMCinfsamplemultiply = 10, # Multiplier for increasing number of monte carlo samples for inference purposes.
-        OMCburninperiod = Int(maxnr_samples / 2),
-        COVARIANCEnumericalzero = 1e-6, # Force sinular values whose magnitude is smaller than this to 0 for PINV calculations 
-        COVARIANCEmulticollinearity = 1e+12, # Condition number larger than this indicate multicollinearity 
+        estimatebeta = estimateβ,
+        estimatedelta = estimateδ,
+        psifunctiontype = ψ,
+        phifunctiontype = ψ,
+        forceblockdiagonal = forceblockdiagonal,
+        initparamstd = std,
+        varianceprior = variance,
+        initialweightvector = wt_vec,
+    )
+end
 
-        # refer src/structs.jl to know more about the implementation of Batch
-        learning = Batch(
-            search_dir = Lbfgs(),
-            max_search_dev = 1e-4,
-            levenmarq_eigval = 1e-4,
-            inner_cycles = 10,
-            momentum_const = 1,
-            search_direction_max_norm = 1.0,
-            numerical_zero = 1e-8,
-            max_diffx = 1e-8,
-            max_grad_norm = 0.00001,
-            max_iter = 100,
-            stepsize = 1.0,
-            use_min_stepsize = false,
-            max_stepsize_cycle = 3,
-            wolfe_step_alpha = 0.01,
-            wolfe_step_beta = 0.9,
-            stepsize_rescale = 0.7,
-        ),
+
+"""
+    algocons_init()
+Initializes algorithm constants. If no arguments are passed default values will be used. 
+# Optional Arguments 
+- p: number between 0 & 1; significance level for confidence interval calculations; default `0.05`
+- e_step: Estimation type; (e.g. ExactmissingSerial(), ExactmissingParallel(), ImportanceSerial(), ImportanceParallel())\n
+ This is the strategy for expectation step, also known as missing data integral; default `ExactmissingSerial()` 
+
+- OMCmaxnrsamples: Integer; Maximum number of Monte Carlo Samples to be generated before Monte Carlo Algorithm terminates; default `50`
+- OMCtemperature:Positive Number; Sampling temperature for importance sampling algo; default `0.25`
+    - OMCtemperature = 1 (regular OMC Sampling)
+    - OMCtemperature = 0.0001 (OMC Sampling biased to visit high probability state; not recommended)
+    - OMCtemperature =  5 (OMC Sampling biased to checkout low probability states)
+    - OMCtemperature = 10000000 (almost true sampling)
+- OMCsamplingerror: Floating number; Sampling Error is chosen so that with probability 95% the confidence interval surrounding the actual mean contains 
+the estimated posterior mean. Monte Carlo algorithm will terminate at this point; default `0.01`
+- OMCinfsamplemultiply: Positive Integer; Multiplier for increasing number of monte carlo samples; default `10`
+
+- COVARIANCEnumericalzero: Floating number; Force singular values whose magnitude is smaller than this to zero when applying PINV for covariance matrix calculations
+default `1e-6`  
+- COVARIANCEmulticollinearity:Floating number; Condition number larger than this indicate multicollinearity; default `1e+12`
+- learning: learning strategy (Batch() or Adaptive()); default `Batch()`
+
+- ADAPTIVEinitialstepsize; default `0.5`
+- ADAPTIVEmaxiterations; default `120`
+- searchdirection; default `Lbfgs()` (available: Gradient(), MomentumGrad())
+- maxsearchdev; default `1e-4` Reset search direction if search direction is almost orthogonal to negative gradient
+- levenmarqeigvalue; default 1e-4; Critical smallest eigen value 
+- innercycles; default `10` Number of batch inner cycles for LBFGS & Polak-Ribiere and Moemntum 
+- momentumconstant; Moemntum direction constant control parameter; default `1`
+- searchdirectionmaxnorm; Maximum search direction norm; default `1.0`
+- numericalzero; Numerical zero for batch learning; default `1e-8`
+- maxdiffx; Stopping Criteria for convergence is maximum absolute difference in parameter estimates; default `1e-8` 
+- maxgradnorm; Terminate stopping citerial if max(abs(gradient vector)) is less than gradmax; default `0.00001` 
+- BATCHmaxiterations; Terminate if max num of iterations exceed this number; default `100`
+- BATCHstepsize; Maximum batch step size; default `1.0`
+- BATCHuseminstepsize; Boolean; Batch step size control parameter; default `false`
+- BATCHmaxstepsizecycles; Maximum number of cycles for autostepsize; default `3`
+- BATCHwolfestepalpha; default `0.01`
+- BATCHwolfestepbeta; default `0.9`
+- BATCHstepsizescale; Autostepsize backtracking scaling constant; default 0.7
+
+"""
+function algocons_init(;
+    p = 0.05,
+    e_step = ExactmissingSerial(),
+    OMCmaxnrsamples = 50,
+    OMCtemperature = 0.25,
+    OMCsamplingerror = 0.01,
+    OMCinfsamplemultiply = 10,
+    COVARIANCEnumericalzero = 1e-6,
+    COVARIANCEmulticollinearity = 1e+12,
+    learning = Batch(),
+    ADAPTIVEinitialstepsize = 0.5,
+    ADAPTIVEmaxiterations = 120,
+    searchdirection = Lbfgs(),
+    maxsearchdev = 1e-4,
+    levenmarqeigvalue = 1e-4,
+    innercycles = 10,
+    momentumconstant = 1,
+    searchdirectionmaxnorm = 1.0,
+    numericalzero = 1e-8,
+    maxdiffx = 1e-8,
+    maxgradnorm = 0.00001,
+    BATCHmaxiterations = 100,
+    BATCHstepsize = 1.0,
+    BATCHuseminstepsize = false,
+    BATCHmaxstepsizecycles = 3,
+    BATCHwolfestepalpha = 0.01,
+    BATCHwolfestepbeta = 0.9,
+    BATCHstepsizescale = 0.7,
+)
+
+    OMCburninperiod = Int(OMCmaxnrsamples / 2) # Do not terminate if number of samples is less than burn-in period
+    OMCparforloopmax = Int(OMCmaxnrsamples / 2)
+
+    ADAPTIVEsearchhalflife = Int(ADAPTIVEmaxiterations * 0.30)
+    ADAPTIVEconvergehalflife = Int(ADAPTIVEmaxiterations * 0.50)
+    ADAPTIVEperiod = Int(ADAPTIVEmaxiterations * 0.10)
+
+    BATCHminstepsize = BATCHstepsize / 1000
+
+    return (
+        pval = p,
+        missingdataintegral = e_step,
+        OMCmaxnrsamples = OMCmaxnrsamples,
+        OMCtemperature = OMCtemperature,
+        OMCsamplingerror = OMCsamplingerror,
+        OMCburninperiod = OMCburninperiod,
+        OMCparforloopmax = OMCparforloopmax,
+        OMCinfsamplemultiply = OMCinfsamplemultiply,
+        COVARIANCEnumericalzero = COVARIANCEnumericalzero,
+        COVARIANCEmulticollinearity = COVARIANCEmulticollinearity,
+        doannealstepsize = learning,
+        ADAPTIVEinitialstepsize = ADAPTIVEinitialstepsize,
+        ADAPTIVEmaxiterations = ADAPTIVEmaxiterations,
+        ADAPTIVEsearchhalflife = ADAPTIVEsearchhalflife,
+        ADAPTIVEconvergehalflife = ADAPTIVEconvergehalflife,
+        ADAPTIVEperiod = ADAPTIVEperiod,
+        BATCHsearchdirection = searchdirection,
+        BATCHmaxsearchdev = maxsearchdev,
+        BATCHlevenmarqeigvalue = levenmarqeigvalue,
+        BATCHinnercycles = innercycles,
+        BATCHmomentumconstant = momentumconstant,
+        BATCHsearchdirectionmaxnorm = searchdirectionmaxnorm,
+        BATCHnumericalzero = numericalzero,
+        BATCHmaxdiffx = maxdiffx,
+        BATCHmaxgradnorm = maxgradnorm,
+        BATCHmaxiterations = BATCHmaxiterations,
+        BATCHstepsize = BATCHstepsize,
+        BATCHuseminstepsize = BATCHuseminstepsize,
+        BATCHminstepsize = BATCHminstepsize,
+        BATCHmaxstepsizecycles = BATCHmaxstepsizecycles,
+        BATCHwolfestepalpha = BATCHwolfestepalpha,
+        BATCHwolfestepbeta = BATCHwolfestepbeta,
+        BATCHstepsizescale = BATCHstepsizescale,
     )
 end
 
 
 
 
-function model_init()
-    return GDM(
-        estimate_beta = true,
-        estimate_delta = false,
-        psi_func = DINA(),
-        phi_func = DINA(),
-        forceblockdiagonal = false,
+"""
+    print_init(params, modelcons, algcons)
+
+Prints the initialized values for parameters and model constants 
+"""
+function print_init(params, modelcons, algcons)
+    println(
+        "========================= Initial Values for parameters ========================= \n",
     )
+    pprint(params)
+    println("\n \n \n========================= Model Constants ========================= \n")
+    pprint(modelcons)
+    println("\n \n \n========================= Algorithm Constants ========================= \n")
+    pprint(algcons)
 end
-
-function model_params_init(nr_skills, nr_items, nr_timepoints; weight_vec = [0,0])
-    std = 0.0
-    prior_alpha = zeros(nr_skills)
-    variance_prior = 400/536
-    prior_weight = ((weight_vec[1] - weight_vec[2]) .* prior_alpha) .- ((1 .- prior_alpha) .* weight_vec[2])
-    
-    beta_means = fill(weight_vec, nr_items)
-    beta_invcov = Matrix(I(2)) / variance_prior
-
-    initial_delta_means = prior_weight
-    initial_delta_invcov = 1 / variance_prior
-
-    delta_means = fill(weight_vec, nr_skills)
-    delta_invcov = Matrix(I(2)) / variance_prior
-
-    betavec = beta_means + fill(rand(2,1) * std,nr_items)
-    initial_deltavec = initial_delta_means .+ fill(rand()*std, nr_skills)
-    delta_vec = delta_means + fill(rand(2,1)*std, nr_skills)
-
-     # returning values as tuples 
-     return (
-         std = std,
-         prior_alpha = prior_alpha,
-         variance_prior = variance_prior,
-         prior_weight = prior_weight,
-         beta_means = beta_means,
-         beta_invcov = beta_invcov,
-         initial_delta_means =initial_delta_means,
-         initial_delta_invcov = initial_delta_invcov,
-         delta_means =  delta_means,
-         delta_invcov = delta_invcov,
-         betavec = betavec,
-         initial_deltavec = initial_deltavec,
-        delta_vec = delta_vec
-     )
-end 
-
-function init_theta(estimatedelta::Bool, estimatebeta::Bool, nr_timepoints, beta_vec, initial_delta_vec, delta_vec)
-    if estimatebeta
-        thetavector = beta_vec
-    end
-
-    if estimatedelta
-        thetavector = [thetavector; initial_delta_vec]
-
-        if nr_timepoints > 1 
-            thetavector = [thetavector; delta_vec] # I have some doubts here regarding the size of thetavector - is it going have be nr_times + 1 terms?
-        end
-    end
-    return thetavector
-end 
