@@ -174,8 +174,12 @@ function print_init(params, modelcons, algcons)
         "========================= Initial Values for parameters ========================= \n",
     )
     pprint(params)
-    println("\n \n \n========================= Model Constants ========================= \n")
+    println(
+        "\n \n \n========================= Model Constants ========================= \n",
+    )
     pprint(modelcons)
-    println("\n \n \n========================= Algorithm Constants ========================= \n")
+    println(
+        "\n \n \n========================= Algorithm Constants ========================= \n",
+    )
     pprint(algcons)
 end

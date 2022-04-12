@@ -6,20 +6,28 @@ Returns xdataset, subject names, and item names.
 - xdataset is an Vector of Matrix with length = `nr_timepoints`
 - xdataset[i] = Matrix of size `nr_subjects`, `nr_items`
 """
-function extractX(X_df)
+function extractX(X_df) # similar to makedataset function in matlab-carla 
     @assert typeof(X_df) == DataFrame "Expected X to be of type DataFrame"
-    subject_names = X_df[!, 1]
-    nr_timepoints = length(unique(X_df[!, 2]))
+    subject_names = unique(X_df[!, :subject])
+    nr_timepoints = length(unique(X_df[!, :time]))
+    nrexaminees = length(subject_names)
+    firstexamineelocs = uniqueidx(X_df)
     X_df = X_df[!, Not([1])] # Removing Subject Names 
-    
-    item_names = names(X_df[!,Not(:time)])
+    X_df = X_df[!, Not(:time)] # Removing time column 
+    item_names = names(X_df)
 
-    X = Array{Matrix}(undef, nr_timepoints)
-    for i in 1:nr_timepoints
-        X[i] = Matrix(X_df[X_df[!, :time] .==i, Not(:time)])
+
+    thedatamx = Matrix(X_df)
+    xdataset = Array{Matrix}(undef, nrexaminees)
+    # logic in makexdataset.m 
+    for i = 1:nrexaminees
+        beginrow = firstexamineelocs[i]
+        endrow = beginrow + nr_timepoints - 1
+
+        xdataset[i] = Matrix(thedatamx[beginrow:endrow, :]')
     end
-    X
-    return X, subject_names, item_names, nr_timepoints
+
+    return xdataset, subject_names, item_names, nr_timepoints
 end
 
 """
@@ -155,9 +163,9 @@ function extract(X_df, Q_df, R, configurable_modelcons)
         :betavec => betavec,
         :initialdeltavec => initial_deltavec,
         :deltavec => delta_vec,
-        :time => time
+        :time => time,
     )
-   
+
     return X_matrix, Q_matrix, R_matrix, data_params, modelcons, params
 end
 
@@ -185,14 +193,25 @@ params: A dictionary with the following fields:
 function unpackparams(params)
     if params[:estimatebeta]
         thetavector = params[:betavec]
-    end 
+    end
 
     if params[:estimatedelta]
         thetavector = [thetavector; params[:initialdeltavec]]
-    
+
         if params[:time] # if nr_timepoints > 1 
             thetavector = [thetavector; params[:deltavec]] # Not sure about this 
         end
     end
     return thetavector, params[:betavec], params[:initialdeltavec], params[:deltavec]
-end 
+end
+
+# Utility functions ===================================================
+"""
+"""
+function uniqueidx(X_df)
+    idx = collect(1:size(X_df)[1])
+    X_df.idx = idx
+    firstexamineelocs = unique(X_df, :subject).idx
+    select!(X_df, Not(:idx))
+    return firstexamineelocs
+end
