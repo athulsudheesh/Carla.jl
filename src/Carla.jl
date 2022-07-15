@@ -1,5 +1,4 @@
-module Carla
-
-# Write your package code here.
-
+module Carla 
+    include("datastructs.jl")
+    include("probabilities.jl")
 end

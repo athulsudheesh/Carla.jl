@@ -1,6 +1,5 @@
 using Carla
 using Test
 
-@testset "Carla.jl" begin
-    # Write your tests here.
-end
+include("test_structs.jl")
+include("test_probabilities.jl")
