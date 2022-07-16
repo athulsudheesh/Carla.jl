@@ -5,18 +5,24 @@ response_prob(a::FUZZYDINA, selectedalpha) = sum(selectedalpha)/length(selecteda
 
 # This is equivalent to the psiemission function in MATLAB Carla
 """
-This function computes the emission probability vector.
+    local_emission_pmf(
+        EmissionType::ResponseFunction, QMatrix::Matrix,
+        itemID::Integer, t::Integer, αMatrix::Matrix
+    )
 
-    INPUTS:
-        - EmissionType: Emission Response Type (DINA(),DINO(), or FUZZYDINA())
-        - QMatrix: J (No. of Items) × K (No. of Skills) Matirx
-        - itemID:  Integer denoting the jth item 
-        - t: time index
-        - αMatrix: K (No. of Skills) × T (No. of Timepoints) Matrix
+Computes the local emission probability vectors
 
-    OUTPUT:
-        - emission probability vector 
+### Inputs
 
+- EmissionType: Emission Response Type (DINA(),DINO(), or FUZZYDINA())
+- QMatrix: J (No. of Items) × K (No. of Skills) Matirx
+- itemID:  Integer denoting the jth item 
+- t: time index
+- αMatrix: K (No. of Skills) × T (No. of Timepoints) Matrix
+
+### OUTPUT:
+
+Vector of probability values 
 """
 function local_emission_pmf(
     EmissionType::ResponseFunction, QMatrix,
