@@ -32,9 +32,7 @@ struct FUZZYDINA <: ResponseFunction end
 
 """
 CPM stands for Carla Probability Model.
-
-### Fields
-
+## Keword Arguments 
 - `emissionprob` -- Emission Probability function, type of `ResponseFunction` 
 - `transitionprob` -- Transition Probability function, type of `ResponseFunction`
 - `initialvwec` -- Initial Weight Vector, Vector of `Float64`
@@ -42,15 +40,13 @@ CPM stands for Carla Probability Model.
 - `initparamstd` -- Initial Parameter S.D., a `Float64`
 - `estimatebeta` -- Estimate Beta Parameters?, `Bool` type
 - `estimatedelta` -- Estimate Delta Parameters?, `Bool` type
-
-### Notes
-
+## Output 
+A 2-element Vector{Float64} (Probability Vectors)
+## Notes
 All the fields can be assigned using the appropriate keywords.
 The initialization constructor CPM(), uses the values in the example,
 as default for the fields in CPM. 
-
-### Example
-
+## Example
 - M1 = CPM(
     emissionprob=DINA(),
     transitionprob=DINA(),
@@ -61,22 +57,12 @@ as default for the fields in CPM.
     estimatedelta = false)
 """
 Base.@kwdef struct CPM
-    emissionprob::ResponseFunction
-    transitionprob::ResponseFunction
-    initialwvec::Vector{Float64}
-    varianceprior::Float64
-    initparamstd::Float64
-    estimatebeta::Bool
-    estimatedelta::Bool
+    emissionprob::ResponseFunction = DINA()
+    transitionprob::ResponseFunction = DINA()
+    initialwvec::Vector{Float64} = [1.2, 0.6]
+    varianceprior::Float64 = 100/536
+    initparamstd::Float64 = 0.2
+    estimatebeta::Bool = true
+    estimatedelta::Bool = false
 end
-
-# Constructor for CPM 
-CPM() = CPM(
-    emissionprob=DINA(),
-    transitionprob=DINA(),
-    initialwvec = [1.2, 0.6],
-    initparamstd = 0.2,
-    varianceprior = 100/536,
-    estimatebeta = true,
-    estimatedelta = false)
 export CPM, DINA, DINO, FUZZYDINA
