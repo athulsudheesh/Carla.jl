@@ -18,5 +18,6 @@ makedocs(
 
 deploydocs(
     repo = "github.com/athulsudheesh/Carla.jl.git",
-    branch = "gh-pages",
+    target = "build",
+    branch = "gh-pages"
 )
