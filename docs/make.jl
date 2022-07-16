@@ -1,23 +1,15 @@
-using Documenter, Carla
+using Documenter
+using Carla
 
 makedocs(
-    # options
-    doctest = true,
-    clean = false,
-    sitename = "Carla.jl",
-    format = Documenter.HTML(
-        canonical = "https://juliadata.github.io/DataFrames.jl/stable/",
-        assets = ["assets/favicon.ico"],
-        edit_link = "main"
-    ),
-    pages = Any[
-        "Introduction" => "index.md",
- ],
-    strict = true
+    sitename = "Carla",
+    format = Documenter.HTML(),
+    modules = [Carla]
 )
 
-deploydocs(
-    repo = "github.com/athulsudheesh/Carla.jl.git",
-    target = "build",
-    branch = "gh-pages"
-)
+# Documenter can also automatically deploy documentation to gh-pages.
+# See "Hosting Documentation" and deploydocs() in the Documenter manual
+# for more information.
+#=deploydocs(
+    repo = "<repository url>"
+)=#
