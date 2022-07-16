@@ -31,7 +31,8 @@ FUZZYDINA Response Function
 struct FUZZYDINA <: ResponseFunction end
 
 """
-CPM stands for Carla Probability Model.
+CPM is the data structure for Carla Probability Model.
+
 ## Keword Arguments 
 - `emissionprob` -- Emission Probability function, type of `ResponseFunction` 
 - `transitionprob` -- Transition Probability function, type of `ResponseFunction`
@@ -40,12 +41,12 @@ CPM stands for Carla Probability Model.
 - `initparamstd` -- Initial Parameter S.D., a `Float64`
 - `estimatebeta` -- Estimate Beta Parameters?, `Bool` type
 - `estimatedelta` -- Estimate Delta Parameters?, `Bool` type
-## Output 
-A 2-element Vector{Float64} (Probability Vectors)
+
 ## Notes
 All the fields can be assigned using the appropriate keywords.
 The initialization constructor CPM(), uses the values in the example,
 as default for the fields in CPM. 
+
 ## Example
 - M1 = CPM(
     emissionprob=DINA(),
