@@ -2,7 +2,7 @@
 
 # Response Functions ================================
 abstract type ResponseFunction end
-
+export ResponseFunction
 struct DINA <: ResponseFunction end
 struct DINO <: ResponseFunction end
 struct FUZZYDINA <: ResponseFunction end
