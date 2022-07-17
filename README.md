@@ -4,8 +4,6 @@
 </a>
 </div>
 
+[<img src="https://img.shields.io/badge/docs-latest-blue.svg">](http://google.com.au/)
 
-![][docs-latest-img](http://athulsudheesh.github.io/Carla) 
-
-[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
 
