@@ -5,8 +5,8 @@
 </div>
 
 
-[![][docs-latest-img]][docs-stable-url] 
+![docs-latest-img](http://athulsudheesh.github.io/Carla) 
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-latest-url]: http://athulsudheesh.github.io/Carla.jl
+[docs-latest-url]: 
 
