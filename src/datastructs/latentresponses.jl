@@ -1,4 +1,4 @@
-# This file contains all the required data structures for Carla 
+# This file contains all the latent response data structures 
 
 # Response Functions ================================
 """

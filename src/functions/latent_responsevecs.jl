@@ -10,7 +10,7 @@ response_prob(a::FUZZYDINA, selectedalpha) = sum(selectedalpha)/length(selecteda
         itemID::Integer, t::Integer, αMatrix::Matrix
     )
 
-Computes the local emission response vectors
+Computes the local emission response vectors ``\\psi_{jt} (\\alpha)`` 
 
 ## Arguments
 
@@ -45,7 +45,7 @@ end
         skillID::Integer, t::Integer, αMatrix::Matrix
     )
 
-Computes the local transition probability vectors
+Computes the local transition response vectors ``\\phi_{kt} (\\alpha)``
 
 ## Arguments
 

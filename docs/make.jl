@@ -4,7 +4,15 @@ using Carla
 makedocs(
     sitename = "Carla",
     format = Documenter.HTML(),
-    modules = [Carla]
+    modules = [Carla],
+    pages = Any[
+        "Introduction" => "index.md",
+        "API" => Any[
+            "Data Structures" => "lib/types.md",
+            "Functions" => "lib/functions.md",
+
+        ]
+    ],
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
