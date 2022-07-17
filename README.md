@@ -4,6 +4,6 @@
 </a>
 </div>
 
-[<img src="https://img.shields.io/badge/docs-latest-blue.svg">](http://athulsudheesh.github.io/Carla)
+[<img src="https://img.shields.io/badge/docs-latest-blue.svg">](https://athulsudheesh.github.io/Carla.jl/)
 
 
