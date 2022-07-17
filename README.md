@@ -4,7 +4,9 @@
 </a>
 </div>
 
-[![][docs-img]][docs-url]
 
-[docs-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-url]: https://athulsudheesh.github.io/Carla.jl/
+[![][docs-latest-img]][docs-stable-url] 
+
+[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-latest-url]: http://athulsudheesh.github.io/Carla.jl
+
