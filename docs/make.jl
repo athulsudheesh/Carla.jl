@@ -2,7 +2,7 @@ using Documenter
 using Carla
 
 makedocs(
-    sitename = "Carla",
+    sitename = "Carla.jl",
     format = Documenter.HTML(),
     modules = [Carla],
     pages = Any[
