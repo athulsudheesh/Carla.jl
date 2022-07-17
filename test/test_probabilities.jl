@@ -5,17 +5,17 @@
     
     # Testsets for local_emission_pmf & local_transition_pmf
     let t = 1, j = 1
-       @test local_emission_pmf(DINA(), QMatrix,j,t,αMatirx) == [1;-1]
-       @test local_transition_pmf(DINA(), QMatrix,j,t,αMatirx) == [1;-1]
+       @test emission_responsevec(DINA(), QMatrix,j,t,αMatirx) == [1;-1]
+       @test transition_responsevec(DINA(), QMatrix,j,t,αMatirx) == [1;-1]
     end
 
     let t = 1, j = 3
-        @test local_emission_pmf(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
-        @test local_transition_pmf(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
+        @test emission_responsevec(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
+        @test transition_responsevec(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
      end
 
     let t = 1, j = 2
-        @test local_emission_pmf(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
-        @test local_transition_pmf(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
+        @test emission_responsevec(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
+        @test transition_responsevec(DINA(), QMatrix,j,t,αMatirx) == [0;-1]
     end
 end

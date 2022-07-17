@@ -5,12 +5,12 @@ response_prob(a::FUZZYDINA, selectedalpha) = sum(selectedalpha)/length(selecteda
 
 
 """
-    local_emission_pmf(
+    emission_responsevec(
         EmissionType::ResponseFunction, QMatrix::Matrix,
         itemID::Integer, t::Integer, αMatrix::Matrix
     )
 
-Computes the local emission probability vectors
+Computes the local emission response vectors
 
 ## Arguments
 
@@ -26,7 +26,7 @@ A 2-element Vector{Float64} (Probability Vectors)
 
 Note: *This is equivalent to the psiemission function in MATLAB Carla*
 """
-function local_emission_pmf(
+function emission_responsevec(
     EmissionType::ResponseFunction, QMatrix,
     itemID, t, αMatrix
     )
@@ -40,7 +40,7 @@ function local_emission_pmf(
 end
 
 """
-    local_transition_pmf(
+    transition_responsevec(
         EmissionType::ResponseFunction, RMatrix::Matrix,
         skillID::Integer, t::Integer, αMatrix::Matrix
     )
@@ -61,7 +61,7 @@ A 2-element Vector{Float64} (Probability Vectors)
 
 Note: *This is equivalent to the phitransition function in MATLAB Carla*
 """
-function local_transition_pmf(
+function transition_responsevec(
     EmissionType::ResponseFunction, RMatrix,
     skillID, t, αMatrix
     )
@@ -73,4 +73,4 @@ function local_transition_pmf(
 
     return [probval; -1]
 end
-export local_emission_pmf, local_transition_pmf
+export emission_responsevec, transition_responsevec
