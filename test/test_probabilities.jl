@@ -3,7 +3,7 @@
     αMatirx = [1 1; 0 1]
     QMatrix = [1 0; 1 1; 0 1]
     
-    # Testsets for local_emission_pmf & local_transition_pmf
+    # Testsets for emission_responsevec & transition_responsevec
     let t = 1, j = 1
        @test emission_responsevec(DINA(), QMatrix,j,t,αMatirx) == [1;-1]
        @test transition_responsevec(DINA(), QMatrix,j,t,αMatirx) == [1;-1]

@@ -1,4 +1,5 @@
 module Carla 
-    include("datastructs.jl")
+    include(joinpath("datastructs", "latentresponses.jl"))
+    include(joinpath("datastructs", "probmodels.jl"))
     include("probabilities.jl")
 end

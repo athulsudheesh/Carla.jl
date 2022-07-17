@@ -1,35 +1,3 @@
-# This file contains all the required data structures for Carla 
-
-# Response Functions ================================
-"""
-    ResponseFunction
-
-Abstract type for response functions
-"""
-abstract type ResponseFunction end
-export ResponseFunction
-
-"""
-    DINA <: ResponseFunction
-
-DINA Response Function
-"""
-struct DINA <: ResponseFunction end
-
-"""
-    DINO <: ResponseFunction
-
-DINO Response Function
-"""
-struct DINO <: ResponseFunction end
-
-"""
-    FUZZYDINA <: ResponseFunction
-
-FUZZYDINA Response Function
-"""
-struct FUZZYDINA <: ResponseFunction end
-
 """
 CPM is the data structure for Carla Probability Model.
 
@@ -66,4 +34,5 @@ Base.@kwdef struct CPM
     estimatebeta::Bool = true
     estimatedelta::Bool = false
 end
-export CPM, DINA, DINO, FUZZYDINA
+
+export CPM 
