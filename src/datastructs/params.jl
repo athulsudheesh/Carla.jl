@@ -20,16 +20,16 @@ struct GaussianParameterInit
     mean::Union{Float64,Vector{Float64}}
     noiseSD::Float64
     varianceprior::Float64
-    covmx::Matrix{Float64}
+    invcovmx::Matrix{Float64}
 
     GaussianParameterInit(mean,varianceprior) = begin 
         noiseSD = 0.2
-        covmx = Matrix(I(length(mean))) / varianceprior
-        new(mean,noiseSD,varianceprior,covmx)
+        invcovmx = Matrix(I(length(mean))) / varianceprior
+        new(mean,noiseSD,varianceprior,invcovmx)
     end
     GaussianParameterInit(mean,varianceprior, noiseSD) = begin 
-        covmx = Matrix(I(length(mean))) / varianceprior
-        new(mean,noiseSD,varianceprior,covmx)
+        invcovmx = Matrix(I(length(mean))) / varianceprior
+        new(mean,noiseSD,varianceprior,invcovmx)
     end
 end
 export GaussianParameterInit
