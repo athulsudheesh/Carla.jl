@@ -1,6 +1,6 @@
 
 # Probability Model definition 
-raw"""
+@doc raw"""
     CPM()
     CPM(kwargs...)
 
