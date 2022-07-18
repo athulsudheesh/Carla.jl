@@ -4,13 +4,21 @@ response_prob(a::DINA, selectedalpha) = prod(selectedalpha)
 response_prob(a::FUZZYDINA, selectedalpha) = sum(selectedalpha)/length(selectedalpha)
 
 
-"""
+@doc raw"""
     emission_responsevec(
         EmissionType::ResponseFunction, QMatrix::Matrix,
         itemID::Integer, t::Integer, αMatrix::Matrix
     )
 
-Computes the local emission response vectors ``\\psi_{jt} (\\alpha)`` 
+Computes the local emission response vectors ``\psi_{jt} (\alpha)`` 
+```math
+\psi_{jt} (\alpha) =
+\begin{cases}
+[1, \Pi_{k \in S_{jt}} \alpha_k] & \text{  if DINA-type emission} \\
+[1, 1 - \Pi_{k \in S_{jt}} (1 - \alpha_k)] & \text{  if DINO-type emission} \\
+[1, \frac{\Sigma_{k \in S_{jt}} \alpha_k}{K}] & \text{  if FUZZYDINA-type emission}
+\end{cases}
+```
 
 ## Arguments
 
@@ -22,9 +30,7 @@ Computes the local emission response vectors ``\\psi_{jt} (\\alpha)``
 
 ## Output:
 
-A 2-element Vector{Float64} (Probability Vectors)
-
-Note: *This is equivalent to the psiemission function in MATLAB Carla*
+A 2-element Vector{Float64}
 """
 function emission_responsevec(
     EmissionType::ResponseFunction, QMatrix,
@@ -39,13 +45,22 @@ function emission_responsevec(
     return [probval; -1]
 end
 
-"""
+@doc raw"""
     transition_responsevec(
         EmissionType::ResponseFunction, RMatrix::Matrix,
         skillID::Integer, t::Integer, αMatrix::Matrix
     )
 
-Computes the local transition response vectors ``\\phi_{kt} (\\alpha)``
+Computes the local transition response vectors ``\phi_{kt} (\alpha)``
+
+```math
+\phi_{kt} (\alpha) =
+\begin{cases}
+[1, \Pi_{k \in S_{kt}} \alpha_k] & \text{  if DINA-type emission} \\
+[1, 1 - \Pi_{k \in S_{kt}} (1 - \alpha_k)] & \text{  if DINO-type emission} \\
+[1, \frac{\Sigma_{k \in S_{kt}} \alpha_k}{K}] & \text{  if FUZZYDINA-type emission}
+\end{cases}
+```
 
 ## Arguments
 
@@ -57,9 +72,7 @@ Computes the local transition response vectors ``\\phi_{kt} (\\alpha)``
 
 ## Output:
 
-A 2-element Vector{Float64} (Probability Vectors)
-
-Note: *This is equivalent to the phitransition function in MATLAB Carla*
+A 2-element Vector{Float64}
 """
 function transition_responsevec(
     EmissionType::ResponseFunction, RMatrix,

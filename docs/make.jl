@@ -1,6 +1,6 @@
 using Documenter
 using Carla
-
+DocMeta.setdocmeta!(Carla, :DocTestSetup, :(using Carla); recursive=true)
 makedocs(
     sitename = "Carla.jl",
     format = Documenter.HTML(),

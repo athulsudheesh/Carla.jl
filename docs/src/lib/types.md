@@ -1,5 +1,18 @@
+
+## Probability Model
 ```@autodocs
 Modules = [Carla]
-Pages   = ["datastructs/probmodels.jl",
-            "datastructs/latentresponses.jl"]
+Pages   = ["datastructs/probmodels.jl"]
+```
+
+## Latent Response
+```@autodocs
+Modules = [Carla]
+Pages   = ["datastructs/latentresponses.jl"]
+```
+
+## Parameters 
+```@autodocs
+Modules = [Carla]
+Pages   = ["datastructs/params.jl"]
 ```

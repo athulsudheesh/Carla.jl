@@ -1,4 +1,9 @@
-"""
+
+# Probability Model definition 
+raw"""
+    CPM()
+    CPM(kwargs...)
+
 CPM is the data structure for Carla Probability Model.
 
 ## Keword Arguments 
@@ -16,14 +21,11 @@ The initialization constructor CPM(), uses the values in the example,
 as default for the fields in CPM. 
 
 ## Example
-- M1 = CPM(
-    emissionprob=DINA(),
-    transitionprob=DINA(),
-    initialwvec = [1.2, 0.6],
-    varianceprior = 100/536,
-    initparamstd = 0.2,
-    estimatebeta = true,
-    estimatedelta = false)
+```julia-repl
+julia> M1 = CPM()
+
+CPM(DINA(), DINA(), [1.2, 0.6], 0.1865671641791045, 0.2, true, false)
+```
 """
 Base.@kwdef struct CPM
     emissionprob::ResponseFunction = DINA()
