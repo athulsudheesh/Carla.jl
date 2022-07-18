@@ -33,10 +33,10 @@ end
 CPM is the data structure for Carla Probability Model.
 
 ## Keword Arguments 
-- `emissionprob` -- Emission Probability function, type of `ResponseFunction` 
-- `transitionprob` -- Transition Probability function, type of `ResponseFunction`
-- `initialwvec` -- Initial Weight Vector, Vector of `Float64`
-- `varianceprior` -- Variance Prior, a `Float64`
+- `emissionprob::ResponseFunction` -- Emission Probability function
+- `transitionprob::ResponseFunction` -- Transition Probability function
+- `initialwvec::Vector{Float64}` -- Weight Vector to initialize gaussian priors
+- `varianceprior` -- Variance for initializing a gaussian prior 
 - `opts` -- Options for estimands, 
             by default uses `EstimandOpts(initparamnoiseSD = 0.2, 
                                             estimatebeta = true, estimatedelta = false)`

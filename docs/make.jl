@@ -3,7 +3,7 @@ using Carla
 DocMeta.setdocmeta!(Carla, :DocTestSetup, :(using Carla); recursive=true)
 makedocs(
     sitename = "Carla.jl",
-    format = Documenter.HTML(),
+    format = Documenter.HTML(edit_link=:commit),
     modules = [Carla],
     pages = Any[
         "Introduction" => "index.md",
