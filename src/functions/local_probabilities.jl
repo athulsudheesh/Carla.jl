@@ -37,3 +37,18 @@ function local_emission(
 end
 
 export local_emission
+
+# The definition of this function is probably wrong! 
+# I am guessing the MATLAB implementation is also wrong
+function local_transition(
+    EmissionType::ResponseFunction, RMatrix,
+    skillID, t, αMatrix, deltavec, temperature)
+
+    phivec = transition_responsevec(
+        EmissionType::ResponseFunction, RMatrix,
+        skillID, t, αMatrix)
+    
+    sigmoid((deltavec' * phivec)/temperature)
+end
+
+export local_transition

@@ -48,6 +48,12 @@ julia> # Initializing βparams for our M1 model.
 julia>  βparams = params(GaussianParameterInit(M1.initialwvec,
                                        M1.varianceprior))
 params(GaussianParameterInit([1.2, 0.6], 0.2, 0.1865671641791045, [5.359999999999999 0.0; 0.0 5.359999999999999]), [1.3862321329853542, 0.6293077030876637])
+
+julia> # Initializing initialδoarams for our M1 model 
+julia> prioralpha = 0
+julia> initialδprior = initialδprior = initialdelta_init(M1.initialwvec, M1.varianceprior,prioralpha)
+julia> initlaδparams = params(initialδprior)
+params(GaussianParameterInit(-0.6, 0.2, 0.1865671641791045, [5.359999999999999;;]), [-0.5142508455381457])
 ```
 """
 mutable struct params 
