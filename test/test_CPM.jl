@@ -4,17 +4,15 @@
         emissionprob=DINA(),
         transitionprob=DINA(),
         initialwvec = [1.2, 0.6],
-        initparamstd = 0.2,
         varianceprior = 100/536,
-        estimatebeta = true,
-        estimatedelta = false);
+        opts = EstimandOpts())
 
     @test M1.emissionprob == M2.emissionprob
     @test M1.transitionprob == M2.transitionprob
     @test M1.initialwvec == M2.initialwvec
-    @test M1.initparamstd == M2.initparamstd
+    @test M1.opts. initparamnoiseSD == M2.opts. initparamnoiseSD
     @test M1.varianceprior == M2.varianceprior
-    @test M1.estimatebeta == M2.estimatebeta 
-    @test M1.estimatedelta == M2.estimatedelta
+    @test M1.opts.estimatebeta == M2.opts.estimatebeta 
+    @test M1.opts.estimatedelta == M2.opts.estimatedelta
 end
 

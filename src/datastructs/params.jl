@@ -1,60 +1,61 @@
 @doc raw"""
-    GaussianPrior(mean::Union{Float64,Vector{Float64}},
-                    sd::Float64,
-                    varianceprior::Float64)
+    GaussianParameterInit(mean::Union{Float64,Vector{Float64}},
+                    varianceprior::Float64, noiseSD::Float64 (optional))
 
-Creates a gaussian prior object with the given mean, sd, and co-variance
+Initializes a gaussian parameter prior with the given mean, and co-variance
 
 ## Examples 
 ```julia-repl
-julia> initialδprior = GaussianPrior(0.5,0.1,0.8)
-GaussianPrior(0.5, 0.1, 0.8, [1.25;;])
+julia> GaussianParameterInit(0.5,0.1) 
+GaussianParameterInit(0.5, 0.2, 0.1, [10.0;;])
 
-julia> βprior = GaussianPrior([0.2,0.5],0.1,0.8)
-GaussianPrior([0.2, 0.5], 0.1, 0.8, [1.25 0.0; 0.0 1.25])
+julia> GaussianParameterInit([0.2, 0.6], 0.5)
+GaussianParameterInit([0.2, 0.6], 0.2, 0.5, [2.0 0.0; 0.0 2.0])
+
+julia> GaussianParameterInit([0.2, 0.6], 0.5, 0.5) # Also passing initparamsd (0.5)
+GaussianParameterInit([0.2, 0.6], 0.5, 0.5, [2.0 0.0; 0.0 2.0])
 ```
-
 """
-struct GaussianPrior
+struct GaussianParameterInit
     mean::Union{Float64,Vector{Float64}}
-    sd::Float64
+    noiseSD::Float64
     varianceprior::Float64
     covmx::Matrix{Float64}
 
-    GaussianPrior(mean,sd,varianceprior) = begin 
+    GaussianParameterInit(mean,varianceprior) = begin 
+        noiseSD = 0.2
         covmx = Matrix(I(length(mean))) / varianceprior
-        new(mean,sd,varianceprior,covmx)
+        new(mean,noiseSD,varianceprior,covmx)
+    end
+    GaussianParameterInit(mean,varianceprior, noiseSD) = begin 
+        covmx = Matrix(I(length(mean))) / varianceprior
+        new(mean,noiseSD,varianceprior,covmx)
     end
 end
-export GaussianPrior
+export GaussianParameterInit
 
 # There is some error in the way initialdeltaparams are initialized. Check with Dr. Golden
 # Update the bellow example as well. 
 @doc raw"""
-    params(prior::GaussianPrior)
+    params(prior::GaussianParameterInit)
 
 # Example 
 ```julia-repl
-julia> M1 = CPM() # Initializing a Carla Probability Model 
-CPM(DINA(), DINA(), [1.2, 0.6], 0.1865671641791045, 0.2, true, false)
+julia> M1 = CPM()
+CPM(DINA(), DINA(), [1.2, 0.6], 0.1865671641791045, EstimandOpts(0.2, true, false))
 
 julia> # Initializing βparams for our M1 model. 
-julia> βparams = params(GaussianPrior(M1.initialwvec,
-                                M1.initparamstd,
-                                M1.varianceprior))
-params(GaussianPrior([1.2, 0.6], 0.2, 0.1865671641791045, [5.359999999999999 0.0; 0.0 5.359999999999999]), [1.2069019080708794, 0.6959083361750591])
-
-julia> # Initializing initialδparams for our M1 Model
-initialδparams = params(GaussianPrior(M1.initialwvec[1], M1.initparamstd, M1.varianceprior))
-params(GaussianPrior(1.2, 0.2, 0.1865671641791045, [5.359999999999999;;]), [1.2190006135375588])
+julia>  βparams = params(GaussianParameterInit(M1.initialwvec,
+                                       M1.varianceprior))
+params(GaussianParameterInit([1.2, 0.6], 0.2, 0.1865671641791045, [5.359999999999999 0.0; 0.0 5.359999999999999]), [1.3862321329853542, 0.6293077030876637])
 ```
 """
 mutable struct params 
-    prior::GaussianPrior
+    prior::GaussianParameterInit
     val::Union{Float64, Vector{Float64}}
 
     params(prior) = begin 
-        val = prior.mean .+ (rand(length(prior.mean)) * prior.sd)
+        val = prior.mean .+ (rand(length(prior.mean)) * prior.noiseSD)
         new(prior,val)
     end
 end 
