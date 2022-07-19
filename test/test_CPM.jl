@@ -1,5 +1,5 @@
 @testset "Testing CPM Constructors" begin
-    M1 = CPM();
+    M1 = CPM()
     M2 = CPM(
         emissionprob=DINA(),
         transitionprob=DINA(),

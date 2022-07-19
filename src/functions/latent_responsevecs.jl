@@ -39,8 +39,13 @@ function emission_responsevec(
 
     αvec = αMatrix[:,t]
     qrow = QMatrix[itemID,:]
-    selectedalpha = αvec[Bool.(qrow)]
-    probval = response_prob(EmissionType, selectedalpha)
+    
+    if isempty(qrow)
+        probval = 0
+    else
+        selectedalpha = αvec[Bool.(qrow)]
+        probval = response_prob(EmissionType, selectedalpha)
+    end 
 
     return [probval; -1]
 end
@@ -53,6 +58,11 @@ end
 
 Computes the local transition response vectors ``\phi_{kt} (\alpha)``
 
+When t = 1
+```math
+\phi_{kt} (\alpha) = -1
+```
+else
 ```math
 \phi_{kt} (\alpha) =
 \begin{cases}
@@ -78,12 +88,21 @@ function transition_responsevec(
     EmissionType::ResponseFunction, RMatrix,
     skillID, t, αMatrix
     )
-
-    αvec = αMatrix[:,t]
-    rrow = RMatrix[skillID,:]
-    selectedalpha = αvec[Bool.(rrow)]
-    probval = response_prob(EmissionType, selectedalpha)
-
-    return [probval; -1]
+    if t == 1
+        return -1
+    else
+        αvec = αMatrix[:,t - 1]
+        rrow = RMatrix[skillID,:]
+        if isempty(rrow)
+            probval = 0
+        else
+            selectedalpha = αvec[Bool.(rrow)]
+            probval = response_prob(EmissionType, selectedalpha)
+        end
+        return [probval; -1]
+    end
 end
 export emission_responsevec, transition_responsevec
+
+
+# need to update the test functions for transition_responsevec
