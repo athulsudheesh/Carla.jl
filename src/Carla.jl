@@ -1,5 +1,5 @@
 module Carla 
-using LinearAlgebra
+using LinearAlgebra, StructArrays
     include(joinpath("datastructs", "latentresponses.jl"))
     include(joinpath("datastructs", "probmodels.jl"))
     include(joinpath("datastructs","params.jl"))

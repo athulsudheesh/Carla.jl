@@ -15,3 +15,7 @@ function initialdelta_init(initialwvec, varianceprior, priorαvec)
     GaussianParameterInit(initialwprior,varianceprior)
 end
 export initialdelta_init
+
+soa(x) = StructArray(x)
+flat(x) = Float64.(Iterators.flatten(x))
+export soa, flat

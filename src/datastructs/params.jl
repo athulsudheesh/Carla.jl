@@ -51,9 +51,21 @@ params(GaussianParameterInit([1.2, 0.6], 0.2, 0.1865671641791045, [5.35999999999
 
 julia> # Initializing initialδoarams for our M1 model 
 julia> prioralpha = 0
-julia> initialδprior = initialδprior = initialdelta_init(M1.initialwvec, M1.varianceprior,prioralpha)
-julia> initlaδparams = params(initialδprior)
+julia> initialδprior = initialdelta_init(M1.initialwvec, M1.varianceprior,prioralpha)
+julia> initialδparams = params(initialδprior)
 params(GaussianParameterInit(-0.6, 0.2, 0.1865671641791045, [5.359999999999999;;]), [-0.5142508455381457])
+
+julia> # Suppose we had 4 skills 
+julia> initialdeltas =[params(initialδprior) for i in 1:4]
+julia> # We'll turn this into a StructArray object for better element access and manipulation 
+julia> initialdeltas = soa(initialdeltas)
+julia> # While accessing values of initialdeltas, always use flat function
+julia> flat(initialdeltas.val)
+4-element Vector{Float64}:
+ -0.5152143458269017
+ -0.5816928334586648
+ -0.5639140047678437
+ -0.4054633302643975 
 ```
 """
 mutable struct params 

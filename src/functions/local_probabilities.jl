@@ -28,7 +28,7 @@ A Float64
 function local_emission(
     EmissionType::ResponseFunction, QMatrix,
     itemID, t, αMatrix, betavector)
-
+    
     psivec = emission_responsevec(
         EmissionType, QMatrix,
         itemID, t, αMatrix)
@@ -38,12 +38,36 @@ end
 
 export local_emission
 
-# The definition of this function is probably wrong! 
-# I am guessing the MATLAB implementation is also wrong
+@doc raw"""
+    local_transition(
+        EmissionType::ResponseFunction, RMatrix,
+        skillID, t, αMatrix, deltavec, temperature) 
+
+Computes the probability that an examinee has mastered the latent skill k
+at assessment time t, given the examinee's latent skill profile at t-1. This is also 
+known as the complete-data local transition probability ``P_{\delta_k}^{\alpha} (t)``
+
+
+```math
+P_{\delta_k}^{\alpha} (t) = \rho(\delta_k(t)^T \phi_{kt}(\alpha (t -1))) 
+```
+where ``\rho`` is a logistic sigmoidal function. ``\rho(x) = \frac{1}{1 + e^{-x}}``
+## Arguments 
+- `EmissionType`: Emission Response Type (DINA(),DINO(), or FUZZYDINA())
+- `RMatrix`: K (No. of Skills) × K (No. of Skills) Matirx
+- `skillID`:  Integer denoting the jth skill
+- `t`: time index
+- `αMatrix`: K (No. of Skills) × T (No. of Timepoints) Matrix
+- `deltavec` - delta values for a given skill at time t
+
+## Output 
+
+A Float64
+"""
 function local_transition(
     EmissionType::ResponseFunction, RMatrix,
     skillID, t, αMatrix, deltavec, temperature)
-
+ 
     phivec = transition_responsevec(
         EmissionType::ResponseFunction, RMatrix,
         skillID, t, αMatrix)
