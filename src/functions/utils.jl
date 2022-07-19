@@ -19,3 +19,26 @@ export initialdelta_init
 soa(x) = StructArray(x)
 flat(x) = Float64.(Iterators.flatten(x))
 export soa, flat
+
+"""
+    protected_log(x)
+
+This is a "protected" natural logarithm function.
+
+If the input to the function is too small of a positive
+number, then the input is replaced by a small positive number
+to prevent generating minus infinity.
+"""
+function protected_log(x)
+    myrealmin = 2.2251e-305
+    protectedX = ((x .<= myrealmin) .* myrealmin) .+ ((x .> myrealmin) .*x)
+    log.(protectedX)
+end
+export protected_log
+
+function protected_exp(x)
+    mylogmaxnum = 702.8750
+    protectedX = ((x .>= mylogmaxnum) .* mylogmaxnum) .+ ((x .< mylogmaxnum) .*x)
+    exp.(protectedX)
+end 
+export protected_exp

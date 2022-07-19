@@ -1,2 +1,1 @@
-Step 1: Implement Emission Probability 
-Step 2: Implement Transition Probability
+- Write test suite for global_probabilities 
