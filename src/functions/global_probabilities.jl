@@ -13,6 +13,9 @@ given their evidence & proficiency models.
 - `QMatrix`: J (No. of Items) × K (No. of Skills) Matirx
 - `αMatrix`: K (No. of Skills) × T (No. of Timepoints) Matrix
 - `β`: β values for the item bank, Vector of length J
+
+## Output 
+A Float64
 """
 function global_emission(
     EmissionType::ResponseFunction, data, QMatrix, αMatrix, β)
@@ -43,3 +46,41 @@ function global_emission(
 end
 
 export global_emission
+
+@doc raw"""
+    global_transition(
+        TransitionType::ResponseFunction, RMatrix, αMatrix, δ0, δ, temperature)
+
+Computes the latent skill profile trajectory probability for an examinee. 
+
+## Arguments 
+- `TransitionType`: Specify if it's a `DINA()`, `DINO()` or `FUZZYDINA()` transition type
+- `RMatrix`: 
+- `αMatrix`: latent attribute profile trajectory (K × T)
+-  `δ0`: initial detlas, δ[0]
+- `δ`: delta values 
+- `temperature`: temeprature parameter strictly positive. (used during importance sampling)
+
+## Output 
+A Float64
+"""
+function global_transition(
+    TransitionType::ResponseFunction, RMatrix, αMatrix, δ0, δ, temperature)
+
+    nrskills, nrtimepoints = size(αMatrix)
+    transitions_local = zeros(nrskills, nrtimepoints)
+
+    for t = 1:nrtimepoints
+        for skillID in 1:nrskills
+            transitions_local[skillID,t] = local_transition(TransitionType,RMatrix,
+                                                        skillID, t,αMatrix, δ0, δ[t], temperature)
+        end
+    end
+
+    # Product of local transition probabilites 
+    transitionMx = (αMatrix .* transitions_local) .+ ((1 .- αMatrix) .* (1 .- transitions_local))
+    logtransition = protected_log(transitionMx)
+    sumlogtransition = sum(logtransition)
+    protected_exp(sumlogtransition)
+end
+export global_transition

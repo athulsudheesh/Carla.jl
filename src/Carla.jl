@@ -8,6 +8,8 @@ using LinearAlgebra, StructArrays
     include(joinpath("functions", "latent_responsevecs.jl"))
     include(joinpath("functions","local_probabilities.jl"))
     include(joinpath("functions","global_probabilities.jl"))
+    include(joinpath("functions","likelihoods.jl"))
+    include(joinpath("functions","gradients.jl"))
 
     include(joinpath("functions", "utils.jl"))
 end

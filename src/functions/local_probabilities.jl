@@ -1,6 +1,8 @@
 @doc raw"""
-    local_emission(EmissionType::ResponseFunction, QMatrix,
-    itemID, t, αMatrix, betavector)
+    local_emission(
+        EmissionType::ResponseFunction, QMatrix,
+        itemID, t, αMatrix, betavector
+        )
 
 Computes the probability that an examinee with the given skill profile (αMatrix)
 will correctly answer the item - itemID, at given time t. This is also known as
@@ -40,8 +42,9 @@ export local_emission
 
 @doc raw"""
     local_transition(
-        EmissionType::ResponseFunction, RMatrix,
-        skillID, t, αMatrix, deltavec, temperature) 
+        TransitionType::ResponseFunction, RMatrix,
+        skillID, t, αMatrix, deltavec, temperature
+        ) 
 
 Computes the probability that an examinee has mastered the latent skill k
 at assessment time t, given the examinee's latent skill profile at t-1. This is also 
@@ -53,7 +56,7 @@ P_{\delta_k}^{\alpha} (t) = \rho(\delta_k(t)^T \phi_{kt}(\alpha (t -1)))
 ```
 where ``\rho`` is a logistic sigmoidal function. ``\rho(x) = \frac{1}{1 + e^{-x}}``
 ## Arguments 
-- `EmissionType`: Emission Response Type (DINA(),DINO(), or FUZZYDINA())
+- `TransitionType`: Transition Response Type (DINA(),DINO(), or FUZZYDINA())
 - `RMatrix`: K (No. of Skills) × K (No. of Skills) Matirx
 - `skillID`:  Integer denoting the jth skill
 - `t`: time index
@@ -65,14 +68,22 @@ where ``\rho`` is a logistic sigmoidal function. ``\rho(x) = \frac{1}{1 + e^{-x}
 A Float64
 """
 function local_transition(
-    EmissionType::ResponseFunction, RMatrix,
-    skillID, t, αMatrix, deltavec, temperature)
+    TransitionType::ResponseFunction, RMatrix,
+    skillID, t, αMatrix, delta0, δ, temperature)
  
     phivec = transition_responsevec(
-        EmissionType::ResponseFunction, RMatrix,
+        TransitionType::ResponseFunction, RMatrix,
         skillID, t, αMatrix)
-    
-    sigmoid((deltavec' * phivec)/temperature)
+    if t == 1
+        deltavec = delta0
+        transition = sigmoid((deltavec' * phivec)/temperature)[1] # for somereason, a multidimentional 
+                                                                 # array was being generated 
+                                                                # e.g [traitionval;;;]
+    else 
+        deltavec = δ
+        transition = sigmoid((deltavec' * phivec)/temperature)
+    end
+    transition
 end
 
 export local_transition
