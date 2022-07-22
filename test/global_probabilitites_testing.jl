@@ -1,11 +1,15 @@
+# These tests don't check for the correctness! 
+# The goal of this test file is to make sure API's are not breaking 
+# during the development stage.   
+
 using Carla
 
 temperature = 1.0
-J = 3; K = 2; T = 2;
-αMatrix = [1 1; 0 0]
-QMatrix = [1 0; 1 1; 0 1]
+J = 3; K = 2; T = 1;
+αMatrix = rand([0,1],K,T)
+QMatrix = rand([0,1],J,K)
 
-M1 = CPM()
+M1 = CPM(transitionprob = DINO(),opts=EstimandOpts(estimatedelta=true))
 
 βprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior))
 β = [βprior for i in 1:J]
@@ -20,7 +24,7 @@ priorα = 0
 
 δ = soa(δ)
 
-data = StudentResponse(rand([1,0],2,2),ones(2,2))
+data = StudentResponse(rand([1,0],J,T),ones(J,T))
 
 global_emission(M1.emissionprob, data,QMatrix,αMatrix,β.val)
 
@@ -41,3 +45,4 @@ global_transition(
 # Testing likelihoodcompletealpha 
 likelihoodcompletealpha(M1, data, QMatrix, QMatrix, αMatrix, θ, temperature)
 
+Δriskαᵢ(M1,data,αMatrix, QMatrix, QMatrix, θ, temperature)

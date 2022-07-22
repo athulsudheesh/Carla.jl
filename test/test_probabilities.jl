@@ -11,6 +11,10 @@
                                         M1.varianceprior)) for i in 1:K]
     deltas = soa(deltas)
     temperature = 1.0
+
+    priorα = 0  
+    δ0prior =  initialdelta_init(M1.initialwvec, M1.varianceprior, priorα)
+    δ0 = params(δ0prior)
     
     # Initializing δ(0)
     prioralpha = 0
@@ -27,7 +31,7 @@
       emission_prob = local_emission(DINA(),QMatrix,j,t,αMatirx, betas.val[j])
       @test isapprox(emission_prob,0.6494881694864728,rtol=0.1)
 
-      transition_prob = local_transition(DINA(),QMatrix,k,t,αMatirx,deltas.val[k], temperature)
+      transition_prob = local_transition(DINA(),QMatrix,k,t,αMatirx, δ0.val,deltas.val[k], temperature)
       @test isapprox(transition_prob,0.6311626022341116,rtol=0.1)
     end
 
@@ -47,7 +51,7 @@
 
     let t = 1, j = 2, k = 1
         @test transition_responsevec(DINA(), QMatrix,j,t,αMatirx) == -1 
-        transition_prob = local_transition(DINA(),QMatrix,k,t,αMatirx,flat(delta1s.val)[k], temperature)
+        transition_prob = local_transition(DINA(),QMatrix,k,t,αMatirx, δ0.val, flat(delta1s.val)[k], temperature)
         @test isapprox(transition_prob, 0.6133653786749024,rtol=0.1)
     end
 end

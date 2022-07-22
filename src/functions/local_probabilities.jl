@@ -43,7 +43,7 @@ export local_emission
 @doc raw"""
     local_transition(
         TransitionType::ResponseFunction, RMatrix,
-        skillID, t, αMatrix, deltavec, temperature
+        skillID, t, αMatrix, δ0, δ, temperature
         ) 
 
 Computes the probability that an examinee has mastered the latent skill k
@@ -61,7 +61,8 @@ where ``\rho`` is a logistic sigmoidal function. ``\rho(x) = \frac{1}{1 + e^{-x}
 - `skillID`:  Integer denoting the jth skill
 - `t`: time index
 - `αMatrix`: K (No. of Skills) × T (No. of Timepoints) Matrix
-- `deltavec` - delta values for a given skill at time t
+- `δ0` - initial delta values 
+- `δ` - delta values 
 
 ## Output 
 

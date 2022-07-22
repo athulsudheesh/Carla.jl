@@ -4,6 +4,7 @@ using LinearAlgebra, StructArrays
     include(joinpath("datastructs", "probmodels.jl"))
     include(joinpath("datastructs","params.jl"))
     include(joinpath("datastructs","data.jl"))
+    include(joinpath("datastructs", "expectationstrategies.jl"))
 
     include(joinpath("functions", "latent_responsevecs.jl"))
     include(joinpath("functions","local_probabilities.jl"))

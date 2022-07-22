@@ -7,7 +7,7 @@
 Abstract type for response functions
 """
 abstract type ResponseFunction end
-export ResponseFunction
+
 
 """
     DINA <: ResponseFunction
