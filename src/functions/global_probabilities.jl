@@ -73,7 +73,7 @@ function global_transition(
     for t = 1:nrtimepoints
         for skillID in 1:nrskills
             transitions_local[skillID,t] = local_transition(TransitionType,RMatrix,
-                                                        skillID, t,αMatrix, δ0, δ[t], temperature)
+                                                        skillID, t,αMatrix, δ0[skillID], δ[t], temperature)
         end
     end
 

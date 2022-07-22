@@ -42,3 +42,70 @@ function protected_exp(x)
     exp.(protectedX)
 end 
 export protected_exp
+
+"""
+    AllPatterns(k)
+
+Generate all possible α patterns for a given number of skills
+
+## Argument
+- `k`: No of skills 
+
+## Output 
+
+A Matrix of size k × 2^k   
+"""
+struct AllPatterns <: AbstractArray{Bool,2}; k::Int; end
+Base.size(p::AllPatterns) = (p.k, 2^(p.k))
+Base.getindex(p::AllPatterns, i::Int, j::Int) = isodd(j >> (i-1))
+
+export AllPatterns
+
+
+
+# Depreciated functions 
+"""
+    AllPatterns(k)
+
+Generate all possible α patterns for a given number of skills
+
+## Argument
+- `k`: No of skills 
+
+## Output 
+
+A Matrix of size 2^k × k
+
+## Example 
+
+```julia-repl
+julia> AllPatterns(3)'
+8×3 adjoint(::AllPatterns) with eltype Bool:
+ 1  0  0
+ 0  1  0
+ 1  1  0
+ 0  0  1
+ 1  0  1
+ 0  1  1
+ 1  1  1
+ 0  0  0 
+```
+"""
+function all_patterns(k)
+    reduce(hcat,[digits(i,base=2,pad=k) for i in 0:2^k-1])'
+end
+
+function add_one_binary!(x::BitVector)
+    d = length(x)
+    for i in d:-1:1
+        if !x[i]
+            x[i] = true
+            for j in i+1:d
+                x[j] = false
+            end
+            return x
+        end
+    end
+    return x
+end
+

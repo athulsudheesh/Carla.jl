@@ -1,1 +1,3 @@
-- Write test suite for global_probabilities 
+- Optimize `all_patterns` function for speed
+-  Write test suite for global_probabilities 
+- redo the manual derivative of delta_risk_i 

@@ -70,7 +70,7 @@ function Δriskαᵢ(
             phivec = transition_responsevec(model.transitionprob, RMatrix,
                                             skillID,t,αMatrix)
             pt = local_transition(model.transitionprob, RMatrix,
-                                            skillID, t, αMatrix, δ0, δ[t], temperature)
+                                            skillID, t, αMatrix, δ0[skillID], δ[t], temperature)
             gradsubvec = -(αMatrix[skillID,t] -pt)
             gradcomplete = [gradcomplete; gradsubvec]
         end # end of skillID loop
@@ -82,7 +82,7 @@ function Δriskαᵢ(
                     phivec = transition_responsevec(model.transitionprob, RMatrix,
                                                     skillID,t,αMatrix)
                     pt = local_transition(model.transitionprob, RMatrix,
-                                                skillID, t, αMatrix, δ0, δ[t], temperature)
+                                                skillID, t, αMatrix, δ0[skillID], δ[t], temperature)
                     gradsubvec = -(αMatrix[skillID,t] - pt) * phivec
                     Σtransgrad = Σtransgrad + gradsubvec
                 end # end of time loop 
