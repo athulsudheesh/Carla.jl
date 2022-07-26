@@ -43,9 +43,10 @@ global_transition(
 θ = (β = β.val, δ0 = δ0.val, δ = δ.val)
 
 # Testing likelihoodcompletealpha 
-likelihoodcompletealpha(M1, data, QMatrix, QMatrix, αMatrix, θ, temperature)
+likelihoodcompletealpha(M1, data[1], QMatrix, QMatrix, αMatrix, θ, temperature)
 
-Δriskαᵢ(M1,data,αMatrix, QMatrix, QMatrix, θ, temperature)
+∇riskαᵢ(M1,data[1],αMatrix, QMatrix, QMatrix, θ, temperature)
 
 data = [StudentResponse(rand([1,0],J,T),ones(J,T)) for i in 1:4]
-maprisk(M1,data, QMatrix, QMatrix, θ)
+maprisk(M1,data, QMatrix, QMatrix, θ1)
+∇risk(M1,data, QMatrix,QMatrix,θ1)

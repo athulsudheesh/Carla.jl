@@ -21,3 +21,9 @@ Pages   = ["datastructs/latentresponses.jl"]
 Modules = [Carla]
 Pages   = ["datastructs/params.jl"]
 ```
+
+## Learning Algorithm 
+```@autodocs 
+Modules = [Carla]
+Pages = ["datastructs/optimizers.jl"]
+```

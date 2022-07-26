@@ -63,7 +63,29 @@ export AllPatterns
 
 
 
-# Depreciated functions 
+function compute_paramdims(model,J,K,T)
+    estimateβ = model.opts.estimatebeta
+    estimateδ = model.opts.estimatedelta 
+
+    if T ==1
+        if estimateβ == true && estimateδ == false
+            2J
+        end
+
+        if estimateβ == true && estimateδ == true
+            2J + K
+        end
+    else
+        if estimateβ == true && estimateδ == false
+            2J
+        end
+        if estimateβ == true && estimateδ == true 
+            2J + 2K + K 
+        end
+    end
+end
+export compute_paramdims
+#= Depreciated functions 
 """
     AllPatterns(k)
 
@@ -108,4 +130,4 @@ function add_one_binary!(x::BitVector)
     end
     return x
 end
-
+=#
