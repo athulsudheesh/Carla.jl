@@ -40,7 +40,7 @@ CPM is the data structure for Carla Probability Model.
 - `opts` -- Options for estimands, 
             by default uses `EstimandOpts(initparamnoiseSD = 0.2, 
                                             estimatebeta = true, estimatedelta = false)`
-
+- `paramconstraints::NamedTuple` -- Parameter Cosntraints (`min` = `-Inf`, `max` = `Inf`)
 ## Notes
 All the fields can be assigned using the appropriate keywords.
 The initialization constructor CPM(), uses the values in the example,
@@ -64,6 +64,7 @@ Base.@kwdef struct CPM
     initialwvec::Vector{Float64} = [1.2, 0.6]
     varianceprior::Float64 = 100/536
     opts::EstimandOpts = EstimandOpts()
+    paramconstraints::NamedTuple = (min = -Inf, max = Inf)
 end
 
 export CPM, EstimandOpts

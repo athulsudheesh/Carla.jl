@@ -5,7 +5,7 @@
 using Carla
 
 temperature = 1.0
-J = 3; K = 2; T = 2;
+J = 3; K = 2; T = 1;
 αMatrix = rand([0,1],K,T)
 QMatrix = rand([0,1],J,K)
 
@@ -43,10 +43,24 @@ global_transition(
 θ = (β = β.val, δ0 = δ0.val, δ = δ.val)
 
 # Testing likelihoodcompletealpha 
-likelihoodcompletealpha(M1, data[1], QMatrix, QMatrix, αMatrix, θ, temperature)
+likelihoodcompletealpha(M1, data, QMatrix, QMatrix, αMatrix, θ, temperature)
 
-∇riskαᵢ(M1,data[1],αMatrix, QMatrix, QMatrix, θ, temperature)
-
+∇riskαᵢ(M1,data,αMatrix, QMatrix, QMatrix, θ, temperature)
+θ1 = (β = β, δ0 = δ0, δ = δ)
 data = [StudentResponse(rand([1,0],J,T),ones(J,T)) for i in 1:4]
 maprisk(M1,data, QMatrix, QMatrix, θ1)
 ∇risk(M1,data, QMatrix,QMatrix,θ1)
+
+
+#innercycle = 1 
+#gt = rand(12); gtlast = rand(12); stepsize = 0.5; dtlast = rand(12)
+
+#autosearch(0, gt, gtlast,stepsize, dtlast, optim = LBFGS(), learning = Batch())
+
+#dt = rand(12)
+#Vt = -100.0
+
+#autostep(M1,data,QMatrix, QMatrix, θ1, dt,-gt,Vt, e_strategy=Exact(), linesearch = LineSearch())
+
+batchdecent(M1, soa(data), QMatrix, QMatrix, θ1, 
+    e_strategy = Exact(), linesearch = BackTracking(), learning = Batch(), m_strategy = GradientDescent())
