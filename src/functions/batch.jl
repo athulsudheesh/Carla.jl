@@ -29,8 +29,7 @@ function batchdecent(model::CPM, data,
 
         dt, angulardeviation, innercycleid = autosearch(innercycleid,
             gt, gtlast, laststepsize,
-            dtlast, optim=m_strategy,
-            learning=learning)
+            dtlast, m_strategy,learning)
 
         mapriskval, mlrisk = maprisk(model, data,
             QMatrix, RMatrix, θ,

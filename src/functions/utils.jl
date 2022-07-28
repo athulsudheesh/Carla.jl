@@ -68,23 +68,24 @@ export AllPatterns
 function compute_paramdims(model, J, K, T)
     estimateβ = model.opts.estimatebeta
     estimateδ = model.opts.estimatedelta
-
+    dim = 0
     if T == 1
         if estimateβ == true && estimateδ == false
-            2J
+            dim = 2J
         end
 
         if estimateβ == true && estimateδ == true
-            2J + K
+            dim = 2J + K
         end
     else
         if estimateβ == true && estimateδ == false
-            2J
+            dim = 2J
         end
         if estimateβ == true && estimateδ == true
-            2J + 2K + K
+            dim = 2J + 2K + K
         end
     end
+    return dim
 end
 export compute_paramdims
 
@@ -126,12 +127,12 @@ function m2vecvec(temp)
 end
 export m2vecvec
 
-function boundbox(θ, xmin,xmax)
+function boundbox(θ, xmin, xmax)
     val = hcat(θ.val...)'
     xmaxmask = val .>= xmax
     xminmask = val .<= xmin
     inboundmask = (val .> xmin) .* (val .< xmax)
-    
+
     val = val .* inboundmask
     θ.val .= m2vecvec(val)
 
@@ -146,10 +147,10 @@ function boundbox(θ, xmin,xmax)
 end
 
 function boundboxed!(θ, min, max)
-    boundbox(θ.β,min,max);
-    boundbox(θ.δ0,min,max);
-    boundbox(θ.δ,min,max);
-    return 
+    boundbox(θ.β, min, max)
+    boundbox(θ.δ0, min, max)
+    boundbox(θ.δ, min, max)
+    return
 end
 export boundbox, boundboxed!
 
@@ -178,7 +179,24 @@ function absdiffθ(θ1, θ2, model, T)
         end
     end
 end
-export absdiffθ   
+export absdiffθ
+
+function param_init(M1::CPM, J,K)
+    βprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior))
+    β = [βprior for i in 1:J]
+    β = soa(β)
+
+    δprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior))
+    δ = [δprior for i in 1:K]
+
+    priorα = 0
+    δ0prior = initialdelta_init(M1.initialwvec, M1.varianceprior, priorα)
+    δ0 = [params(δ0prior) for i in 1:K]
+    δ0 = soa(δ0)
+    δ = soa(δ)
+    (β=β, δ0=δ0, δ = δ)
+end
+export param_init
 
 #= Depreciated functions 
 """

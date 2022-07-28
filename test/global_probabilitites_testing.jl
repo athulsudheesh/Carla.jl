@@ -62,5 +62,6 @@ maprisk(M1,data, QMatrix, QMatrix, θ1)
 
 #autostep(M1,data,QMatrix, QMatrix, θ1, dt,-gt,Vt, e_strategy=Exact(), linesearch = LineSearch())
 
-batchdecent(M1, soa(data), QMatrix, QMatrix, θ1, 
-    e_strategy = Exact(), linesearch = BackTracking(), learning = Batch(), m_strategy = GradientDescent())
+batchdecent(M1, soa(data), QMatrix, nothing, θ1, 
+    e_strategy = Exact(), 
+    linesearch = BackTracking(), learning = Batch(), m_strategy = GradientDescent())

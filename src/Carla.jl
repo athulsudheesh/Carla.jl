@@ -17,6 +17,7 @@ using LinearAlgebra, StructArrays, Statistics
     include(joinpath("functions","search_algos.jl"))
     include(joinpath("functions", "back_tracking.jl"))
     include(joinpath("functions","batch.jl"))
+    include(joinpath("functions","runcarla.jl"))
 
     include(joinpath("functions", "utils.jl"))
 end
