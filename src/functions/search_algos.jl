@@ -40,7 +40,7 @@ function autosearch(innercycleid,
         cosineangle = -1
         angulardev = 0
     else
-        angulardev = real(acosd(-cosineangle))
+        angulardev = real(acosd(-round(cosineangle, digits=5)))
     end
     return dt, angulardev, innercycleid
 end

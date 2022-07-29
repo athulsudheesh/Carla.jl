@@ -1,3 +1,6 @@
+"""
+    CARLA(model,data,QMatrix, kwargs...)
+"""
 function CARLA(model::CPM, data, QMatrix; e_strategy = Exact(),  
                 m_strategy = GradientDescent(), learning = Batch(),
                 linesearch = BackTracking(), RMatrix = nothing)
@@ -9,4 +12,4 @@ function CARLA(model::CPM, data, QMatrix; e_strategy = Exact(),
     linesearch = linesearch, learning = learning, m_strategy = m_strategy)
 
 end
-export CARLAda
+export CARLA

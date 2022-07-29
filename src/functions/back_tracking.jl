@@ -26,7 +26,7 @@ function autostep(
     dt, gt, Vt; e_strategy, linesearch::BackTracking)
 
     data = soa(data)
-    _, nrtimepoints = size(data.itemResponse[1])
+    nrtimepoints, _ = size(data.itemResponse[1]')
     nritems, nrskills = size(QMatrix)
     useminstepsize = linesearch.useminstepsize
     minstepsize = linesearch.minstepsize
@@ -73,7 +73,7 @@ function autostep(
             # by scaling down the initial stepsize guess. 
             # If ok, then terminate 
             if !suffdecrease2
-                s1 = scaledecreasefactor * step1
+                step1 = scaledecreasefactor * step1
                 iteration = iteration + 1
                 keepgoing = (iteration < maxiterations)
                 if !keepgoing

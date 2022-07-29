@@ -33,7 +33,7 @@ function ∇riskαᵢ(
     β, δ0, δ = θ.β, θ.δ0, θ.δ
     x, obsloc = data.itemResponse, data.missingindicator
     nrskills, nrtimepoints = size(αMatrix)
-    nritems, _ = size(obsloc)
+    _, nritems = size(obsloc')
     estimateδ = model.opts.estimatedelta
     estimateβ = model.opts.estimatebeta
     gradcomplete = []
@@ -121,7 +121,7 @@ computed in [`∇riskαᵢ`](@ref).
 function ∇risk(model::CPM, data, QMatrix, RMatrix, θ;e_strategy::Exact=Exact())
     data = soa(data)
     nrexaminees = length(data)
-    nritems, nrtimepoints = size(data.itemResponse[1])
+    nrtimepoints, nritems = size(data.itemResponse[1]')
     nrskills = length(θ.δ0)
     temperature = 1.0
     nrterms = 2^(nrskills*nrtimepoints)
@@ -152,19 +152,7 @@ function ∇risk(model::CPM, data, QMatrix, RMatrix, θ;e_strategy::Exact=Exact(
     gradmean = vec(mean(gradavgmx,dims=1))
 
     # Add the gradient of the -ve log prior probablily term 
-    ∇logβprior, ∇logδ0prior, ∇logδprior = all_∇logpriors(model, θ)
-    ∇logθprior = []
-    if model.opts.estimatebeta 
-        ∇logθprior = [∇logθprior; ∇logβprior]
-    end
-
-    if model.opts.estimatedelta 
-        ∇logθprior = [∇logθprior; ∇logδ0prior]
-
-        if nrtimepoints > 1 
-            ∇logθprior = [∇logθprior; ∇logδprior]
-        end
-    end 
+    ∇logθprior = all_∇logpriors(model, θ, nrtimepoints)
     gradmean - (∇logθprior / nrexaminees)
 end
 export ∇risk

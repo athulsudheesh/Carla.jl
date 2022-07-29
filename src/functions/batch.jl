@@ -8,7 +8,7 @@ function batchdecent(model::CPM, data,
 
     stepsize = linesearch.stepsize
 
-    nritems, nrtimepoints = size(data.itemResponse[1])
+    nrtimepoints, nritems = size(data.itemResponse[1]')
     _, nrskills = size(QMatrix)
     xtdims = compute_paramdims(model, nritems, nrskills, nrtimepoints)
 

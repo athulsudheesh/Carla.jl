@@ -29,7 +29,7 @@ function maprisk(model::CPM, data,
     # Compute the -ve normalized log-likelihood risk
     data = soa(data)
     nrexaminees = length(data)
-    nritems, nrtimepoints = size(data.itemResponse[1])
+    nrtimepoints, nritems = size(data.itemResponse[1]')
     nrskills = length(θ.δ0)
     temperature = 1.0
     nrterms = 2^(nrskills * nrtimepoints)
@@ -57,22 +57,11 @@ function maprisk(model::CPM, data,
     end
     μrisk = Σrisk / nrexaminees
 
-    logβprior, logδ0prior, logδprior = all_logpriors(model, θ)
-    logθprior = 0.0
+    logθprior = all_logpriors(model, θ, nrtimepoints)
 
-    if model.opts.estimatebeta
-        logθprior = logθprior + logβprior
-    end
+    Σlogθprior = sum(logθprior)
 
-    if model.opts.estimatedelta
-        logθprior = logθprior + logδ0prior
-
-        if nrtimepoints > 1
-            logθprior = logθprior + logδprior
-        end
-    end
-
-    MAPpenalityterm = (1 / nrexaminees) * logθprior
+    MAPpenalityterm = (1 / nrexaminees) * Σlogθprior
     MAPrisk = μrisk - MAPpenalityterm
     return MAPrisk, μrisk
 end

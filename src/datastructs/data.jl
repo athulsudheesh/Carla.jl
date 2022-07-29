@@ -18,8 +18,8 @@ where ``S`` is the missing data indicator and
 ``X`` is item response
 """
 struct StudentResponse
-    itemResponse::Matrix
-    missingindicator::Matrix
+    itemResponse::Union{Vector,Matrix}
+    missingindicator::Union{Vector,Matrix}
 
     StudentResponse(itemResponse,
                     missingindicator) = begin 

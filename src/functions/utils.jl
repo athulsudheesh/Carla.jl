@@ -157,27 +157,28 @@ export boundbox, boundboxed!
 function absdiffθ(θ1, θ2, model, T)
     estimateβ = model.opts.estimatebeta
     estimateδ = model.opts.estimatedelta
-
+     diff = 0
     if T == 1
         if estimateβ == true && estimateδ == false
-            maximum(abs.(flat(θ1.β.val) - flat(θ2.β.val)))
+            diff =maximum(abs.(flat(θ1.β.val) - flat(θ2.β.val)))
         end
 
         if estimateβ == true && estimateδ == true
             value1 = [flat(θ1.β.val); flat(θ1.δ0.val)]
             value2 = [flat(θ2.β.val); flat(θ2.δ0.val)]
-            maximum(abs.(value1 - value2))
+            diff = maximum(abs.(value1 - value2))
         end
     else
         if estimateβ == true && estimateδ == false
-            maximum(abs.(flat(θ1.β.val) - flat(θ2.β.val)))
+            diff = maximum(abs.(flat(θ1.β.val) - flat(θ2.β.val)))
         end
         if estimateβ == true && estimateδ == true
             value1 = [flat(θ1.β.val); flat(θ1.δ0.val); flat(θ1.δ.val)]
             value2 = [flat(θ2.β.val); flat(θ2.δ0.val); flat(θ2.δ.val)]
-            maximum(abs.(value1 - value2))
+            diff = maximum(abs.(value1 - value2))
         end
     end
+    return diff
 end
 export absdiffθ
 

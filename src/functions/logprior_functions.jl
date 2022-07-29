@@ -14,16 +14,30 @@ function logpriors(θ)
 end
 export logpriors
 
-function all_logpriors(model,θ)
-    if model.opts.estimatebeta
-         logβprior = logpriors(θ.β)
-    end 
+function all_logpriors(model,θ, T)
+    estimatebeta = model.opts.estimatebeta 
+    estimatedelta = model.opts.estimatedelta 
 
-    if model.opts.estimatedelta 
-        logδ0prior = logpriors(θ.δ0)
-        logδprior = logpriors(θ.δ)
+    logβprior = logpriors(θ.β)
+    logδ0prior = logpriors(θ.δ0)
+    logδprior = logpriors(θ.δ)
+
+    if T == 1
+        if estimatebeta == true && estimatedelta == false
+            return logβprior
+        end
+
+        if estimatebeta == true && estimatedelta == true 
+            return [logβprior; logδ0prior]
+        end
+    else
+        if estimatebeta == true && estimatedelta == false 
+            return logβprior
+        end
+        if estimatebeta == true && estimatedelta == true 
+            return [logβprior; logδ0prior; logδprior]
+        end
     end
-    return logβprior, logδ0prior, logδprior
 end
 export all_logpriors
 
@@ -45,15 +59,28 @@ export ∇logpriors
 Computes the derivative of the functions in [`all_logpriors`](@ref)
 """
 
-function all_∇logpriors(model, θ)
-    if model.opts.estimatebeta
-        Δlogβprior = ∇logpriors(θ.β)
-   end 
+function all_∇logpriors(model, θ,T)
+    estimateβ = model.opts.estimatebeta
+    estimateδ = model.opts.estimatedelta
+    Δlogβprior = ∇logpriors(θ.β)
+    Δlogδ0prior = ∇logpriors(θ.δ0)
+    Δlogδprior = ∇logpriors(θ.δ)
 
-   if model.opts.estimatedelta 
-       Δlogδ0prior = ∇logpriors(θ.δ0)
-       Δlogδprior = ∇logpriors(θ.δ)
-   end
-   return Δlogβprior, Δlogδ0prior, Δlogδprior
+    if T == 1
+        if estimateβ == true && estimateδ == false
+            return Δlogβprior
+        end
+
+        if estimateβ == true && estimateδ == true
+            [Δlogβprior; Δlogδ0prior]
+        end
+    else
+        if estimateβ == true && estimateδ == false
+            Δlogβprior
+        end
+        if estimateβ == true && estimateδ == true
+            [Δlogβprior; Δlogδ0prior; Δlogδprior]
+        end
+    end
 end
 export all_∇logpriors

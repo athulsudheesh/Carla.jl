@@ -24,7 +24,7 @@ function global_emission(
     x = data.itemResponse
     obsloc = data.missingindicator
 
-    nritems, nrtimeponts = size(x)
+    nrtimeponts, nritems = size(x')
     emissions_local = zeros(nritems, nrtimeponts)
 
     for t = 1:nrtimeponts
