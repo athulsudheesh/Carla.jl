@@ -10,6 +10,6 @@ function CARLA(model::CPM, data, QMatrix; e_strategy = Exact(),
     batchdecent(model, data, QMatrix, nothing, θ, 
     e_strategy = e_strategy, 
     linesearch = linesearch, learning = learning, m_strategy = m_strategy)
-
+    return θ
 end
 export CARLA

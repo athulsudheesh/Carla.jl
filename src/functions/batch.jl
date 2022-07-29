@@ -35,10 +35,10 @@ function batchdecent(model::CPM, data,
             QMatrix, RMatrix, θ,
             e_strategy = e_strategy)
 
-        thestepsize, Vbest, stepsizecycles = autostep(
+        thestepsize = 0.001 #=, Vbest, stepsizecycles = autostep(
             model, data, QMatrix, RMatrix, θ,
             dt, gt, mapriskval, e_strategy = e_strategy, linesearch = linesearch)
-
+        =#
         lastθ = deepcopy(θ)
         updateθ!(model, θ, thestepsize*dt, nritems, nrskills, nrtimepoints)
         boundboxed!(θ,model.paramconstraints.min, model.paramconstraints.max)
@@ -54,7 +54,7 @@ function batchdecent(model::CPM, data,
         toomanyiterations = iteration  >= maxiterations
         keepgoing = change2large & gradnorm2large & !toomanyiterations
 
-        println("Iteration = $iteration \t MAP Fit = $mapriskval \t ML Error = $mlrisk \t Angular deviation = $angulardeviation \t gradnorm = $absgradnorm")
+        println("Iteration = $iteration \t MAP Fit = $mapriskval \t ML Error = $mlrisk \t Angular deviation = $angulardeviation \t gradnorm = $absgradnorm \t stepsize = $laststepsize")
     end
 end
 export batchdecent
