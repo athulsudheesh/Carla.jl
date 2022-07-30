@@ -46,7 +46,7 @@ function maprisk(model::CPM, data,
         for Σᵢ = 1:nrterms
             αMatrix = reshape(all_patterns[Σᵢ, :], (nrskills, nrtimepoints))
 
-            likelihoodcomplete[nrterms] = likelihoodcompletealpha(
+            likelihoodcomplete[Σᵢ] = likelihoodcompletealpha(
                 model, thedata, QMatrix,
                 RMatrix, αMatrix, θvals, temperature
             )
