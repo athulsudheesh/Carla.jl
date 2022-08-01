@@ -7,6 +7,7 @@ makedocs(
     modules = [Carla],
     pages = Any[
         "Introduction" => "index.md",
+        "Getting Started" => "example1.md",
         "API" => Any[
             "Data Structures" => "lib/types.md",
             "Functions" => "lib/functions.md",

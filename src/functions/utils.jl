@@ -10,9 +10,9 @@ export sigmoid
 """
 Initialization of means for initialdelta
 """
-function initialdelta_init(initialwvec, varianceprior, priorαvec)
+function initialdelta_init(initialwvec, varianceprior, priorαvec, SD)
     initialwprior = (initialwvec[1] - initialwvec[2]) * priorαvec - ((1 - priorαvec) * initialwvec[2])
-    GaussianParameterInit(initialwprior, varianceprior)
+    GaussianParameterInit(initialwprior, varianceprior, SD)
 end
 export initialdelta_init
 
@@ -95,21 +95,21 @@ function updateθ!(model, θ, value::Vector, J, K, T)
 
     if T == 1
         if estimateβ == true && estimateδ == false
-            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], J, 2))
+            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], 2, J)')
         end
 
         if estimateβ == true && estimateδ == true
-            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], J, 2))
+            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], 2, J)')
             θ.δ0.val .= θ.δ0.val + m2vecvec(value[2J+1:2J+K])
         end
     else
         if estimateβ == true && estimateδ == false
-            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], J, 2))
+            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], 2, J)')
         end
         if estimateβ == true && estimateδ == true
-            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], J, 2))
+            θ.β.val .= θ.β.val + m2vecvec(reshape(value[1:2J], 2, J)')
             θ.δ0.val .= θ.δ0.val + m2vecvec(value[2J+1:2J+K])
-            θ.δ.val .= θ.δ.val + m2vecvec(reshape(value[2J+K+1:2J+3K], K, 2))
+            θ.δ.val .= θ.δ.val + m2vecvec(reshape(value[2J+K+1:2J+3K], 2, K)')
         end
     end
 end
@@ -183,15 +183,15 @@ end
 export absdiffθ
 
 function param_init(M1::CPM, J,K)
-    βprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior))
+    βprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior, M1.opts.initparamnoiseSD))
     β = [βprior for i in 1:J]
     β = soa(β)
 
-    δprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior))
+    δprior = params(GaussianParameterInit(M1.initialwvec, M1.varianceprior, M1.opts.initparamnoiseSD))
     δ = [δprior for i in 1:K]
 
     priorα = 0
-    δ0prior = initialdelta_init(M1.initialwvec, M1.varianceprior, priorα)
+    δ0prior = initialdelta_init(M1.initialwvec, M1.varianceprior, priorα, M1.opts.initparamnoiseSD)
     δ0 = [params(δ0prior) for i in 1:K]
     δ0 = soa(δ0)
     δ = soa(δ)

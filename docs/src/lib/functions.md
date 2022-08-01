@@ -6,5 +6,7 @@ Pages   = ["functions/latent_responsevecs.jl",
             "functions/likelihoods.jl",
             "functions/gradients_risk.jl",
             "functions/empirical_risk.jl",
-            "functions/search_algos.jl"]
+            "functions/search_algos.jl", 
+            "functions/batch.jl",
+            "functions/runcarla.jl"]
 ```

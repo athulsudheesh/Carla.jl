@@ -1,3 +1,22 @@
+"""
+    batchdecent(args...)
+
+A Batch descent algorithm 
+
+## Arguments 
+- `model`: The Carla Probability Model
+- `data`: `StudentResponse` of the examiniee 
+    - `data.itemResponse`: J (No. of items) × T (No. of Time points)
+    - `data.missingindicator`:  J (No. of items) × T (No. of Time points)
+- `QMatrix`: J (No. of Items) × K (No. of Skills) Matirx
+- `RMatrix`: RMatrix specifies how skills are temporally connected
+- `θ`: Parameter values, A named tuple θ = (β, δ0, δ)
+
+## Keyword Arguments 
+- `e_strategy`: Estimation Strategy (`Exact` or `IS`)
+- `learning`: `Batch` or `Adaptive`
+- `m_strategy`: Risk Minimization strategy (Gradient Descent/ LBFGS)
+"""
 function batchdecent(model::CPM, data,
     QMatrix, RMatrix, θ;
     e_strategy, linesearch, learning::Batch, m_strategy)
@@ -35,7 +54,7 @@ function batchdecent(model::CPM, data,
             QMatrix, RMatrix, θ,
             e_strategy = e_strategy)
 
-        thestepsize, Vbest, stepsizecycles = autostep(
+        thestepsize , Vbest, stepsizecycles = autostep(
             model, data, QMatrix, RMatrix, θ,
             dt, gt, mapriskval, e_strategy = e_strategy, linesearch = linesearch)
     
