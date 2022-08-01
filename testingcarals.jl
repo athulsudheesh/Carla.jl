@@ -7,6 +7,7 @@ Q = Matrix(Q[:,Not(:Column1)])
 using Revise
 using Carla
 M1 = CPM(varianceprior=1/100000)
+M1 = CPM()
 data = convertX(X)
 data = soa(data)
 nritems, nrskills = size(Q)
@@ -39,3 +40,5 @@ maprisk(M1,data,Q, nothing, θ)
 -0.600000000000000;
 -0.600000000000000])
 ∇risk(M1,data,Q,nothing,θ)
+batchdecent(M1,data,Q,nothing,θ,m_strategy = GradientDescent(),
+     e_strategy=Exact(), linesearch=BackTracking(), learning = Batch())

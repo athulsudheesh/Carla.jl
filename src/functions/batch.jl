@@ -35,10 +35,10 @@ function batchdecent(model::CPM, data,
             QMatrix, RMatrix, θ,
             e_strategy = e_strategy)
 
-        thestepsize = 0.001 #=, Vbest, stepsizecycles = autostep(
+        thestepsize, Vbest, stepsizecycles = autostep(
             model, data, QMatrix, RMatrix, θ,
             dt, gt, mapriskval, e_strategy = e_strategy, linesearch = linesearch)
-        =#
+    
         lastθ = deepcopy(θ)
         updateθ!(model, θ, thestepsize*dt, nritems, nrskills, nrtimepoints)
         boundboxed!(θ,model.paramconstraints.min, model.paramconstraints.max)

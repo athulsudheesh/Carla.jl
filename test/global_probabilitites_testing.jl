@@ -66,11 +66,11 @@ maprisk(M1,data, QMatrix, QMatrix, θ1)
  #   e_strategy = Exact(), 
  #   linesearch = BackTracking(), learning = Batch(), m_strategy = GradientDescent())
 using CDMrdata
-    M1 = CPM()
+    M1 = CPM(varianceprior=900/2922)
     using DataFrames
     dat = load_data("ecpe")
-    X = dat["data"][:,Not(:id)]
-    QMatrix = Matrix(dat["q.matrix"])
+    X = dat["data"][:,Not(:id)][1:1,1:1]
+    QMatrix = Matrix(dat["q.matrix"])[1:1,1:2]
     
     data = convertX(X)
   a = CARLA(M1,data, QMatrix, linesearch=BackTracking(stepsize=0.01))
