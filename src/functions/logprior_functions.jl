@@ -84,3 +84,65 @@ function all_∇logpriors(model, θ,T)
     end
 end
 export all_∇logpriors
+
+function ∇²logpriors(model, θ, T)
+    estimateδ = model.opts.estimatedelta 
+    estimateβ = model.opts.estimatebeta  
+    nritems = length(θ.β)
+    nrskills = length(θ.δ0)
+    βmeans = soa(θ.β.prior).mean 
+    δ0means = soa(θ.δ0.prior).mean 
+    βinvcov = soa(θ.β.prior).invcovmx 
+    δ0invcov = soa(θ.δ0.prior).invcovmx 
+    if T != 1 
+        δmeans = soa(θ.δ.prior).mean 
+        δinvcov = soa(θ.δ.prior).invcovmx
+    end
+
+    logpriorhessian = 0
+    eyenritems = Matrix(I(nritems)); logpriorhessitems = 0
+    eyenrskills = Matrix(I(nrskills));
+
+    if estimateβ
+        for j = 1:nritems
+            logβpriorhess = - βinvcov[j]
+            jselect = eyenritems[:,j]*eyenritems[:,j]'
+            logpriorhessitems = logpriorhessitems .+ kron(jselect, logβpriorhess)
+        end
+    end
+
+    if estimateδ
+        initialpriorhesskills = 0
+        loginitialdeltaprior = 0
+        for k = 1:nrskills
+            loginitialdeltapriorhess =  - flat(δ0invcov[k])
+            kselect = eyenrskills[:,k]*eyenrskills[:,k]'
+            initialpriorhesskills = initialpriorhesskills .+ kron(kselect, loginitialdeltapriorhess)
+        end
+    end
+
+    if estimateδ && T != 1 
+        logpriorhesskills = 0
+        for k = 1:nrskills
+            logdeltapriorhess = - δinvcov[k]
+            kselect = eyenrskills[:,k]*eyenrskills[:,k]'
+            logpriorhesskills = logpriorhesskills .+ kron(kselect, logdeltapriorhess)
+        end
+    end
+
+    if estimateβ && !estimateδ
+        logpriorhessian = logpriorhessitems
+    end 
+
+    if estimateβ && estimateδ
+        logpriorhessian = [logpriorhessitems zeros(2*nritems, nrskills);
+                            zeros(nrskills,2*nritems) initialpriorhesskills]
+        if T != 1
+            logpriorhessian = [logpriorhessian zeros(2*nritems+nrskills, 2*nrskills);
+                            zeros(2*nrskills, 2*nritems + nrskills) logpriorhesskills]
+        end
+    end
+    return logpriorhessian    
+end
+
+export ∇²logpriors

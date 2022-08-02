@@ -148,6 +148,7 @@ function ∇risk(model::CPM, data, QMatrix, RMatrix, θ;e_strategy::Exact=Exact(
         wts = likelihoodcomplete / (eps() + sum(likelihoodcomplete))
         gradavg = gradcompletemx' * wts
         gradavgmx[i,:] = gradavg'
+        
     end
     gradmean = vec(mean(gradavgmx,dims=1))
 

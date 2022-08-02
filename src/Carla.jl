@@ -19,6 +19,7 @@ using LinearAlgebra, StructArrays, Statistics
     include(joinpath("functions","batch.jl"))
     include(joinpath("functions","runcarla.jl"))
     include(joinpath("functions","data_handling.jl"))
+    include(joinpath("functions", "hessians.jl"))
 
     include(joinpath("functions", "utils.jl"))
 end

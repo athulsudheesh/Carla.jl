@@ -63,7 +63,8 @@ function maprisk(model::CPM, data,
 
     MAPpenalityterm = (1 / nrexaminees) * Σlogθprior
     MAPrisk = μrisk - MAPpenalityterm
-    return MAPrisk, μrisk
+    MAPriskvec = loglikelihood .- MAPpenalityterm
+    return MAPrisk, μrisk, MAPriskvec
 end
 
 export maprisk

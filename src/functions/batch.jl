@@ -50,7 +50,7 @@ function batchdecent(model::CPM, data,
             gt, gtlast, laststepsize,
             dtlast, m_strategy,learning)
 
-        mapriskval, mlrisk = maprisk(model, data,
+        mapriskval, mlrisk, mapriskvec = maprisk(model, data,
             QMatrix, RMatrix, θ,
             e_strategy = e_strategy)
 
