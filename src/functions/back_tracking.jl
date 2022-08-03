@@ -47,9 +47,9 @@ function autostep(
     step1 = 1 # test step size
 
     while keepgoing
-
-        updateθ!(model, θ, step1 * dt, nritems, nrskills, nrtimepoints)
-        V1 = maprisk(model, data, QMatrix, RMatrix, θ, e_strategy=e_strategy)[1]
+        θ1 = deepcopy(θ)
+        updateθ!(model, θ1, step1 * dt, nritems, nrskills, nrtimepoints)
+        V1 = maprisk(model, data, QMatrix, RMatrix, θ1, e_strategy=e_strategy)[1]
 
         # Check for sufficient decrease of objective function
         suffdecrease = V1 <= (Vt + step1 * alpha * slope0)
@@ -61,8 +61,9 @@ function autostep(
             step2 = -slope0 / (2 * (V1 - Vt - slope0))
 
             # Evaluate objective function at quadratic approximation stepsize 
-            updateθ!(θ, step2 * alpha * slope0)
-            V2 = maprisk(model, data, QMatrix, RMatrix, θ, e_strategy=e_strategy)[1]
+            θ2 = deepcopy(θ)
+            updateθ!(θ2, step2 * alpha * slope0)
+            V2 = maprisk(model, data, QMatrix, RMatrix, θ2, e_strategy=e_strategy)[1]
 
             # Check for sufficient decrease of objective function 
             suffdecrease2 = V2 <= (Vt + step2 * alpha * slope0)
@@ -79,8 +80,9 @@ function autostep(
                 if !keepgoing
                     if useminstepsize
                         stepsize = rand() * (1 - minstepsize) + minstepsize
-                        updateθ!(model, θ, stepsize * dt, nritems, nrskills, nrtimepoints)
-                        Vbest = maprisk(model, data, QMatrix, RMatrix, θ, e_strategy=e_strategy)[1]
+                        θbest = deepcopy(θ)
+                        updateθ!(model, θbest, stepsize * dt, nritems, nrskills, nrtimepoints)
+                        Vbest = maprisk(model, data, QMatrix, RMatrix, θbest, e_strategy=e_strategy)[1]
                     else
                         stepsize = step2
                         Vbest = V2

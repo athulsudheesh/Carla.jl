@@ -123,7 +123,7 @@ end
 export updateθ!
 
 function m2vecvec(temp)
-    [temp[i, :] for i in 1:size(temp, 1)]
+    [round.(temp[i, :], digits = 4) for i in 1:size(temp, 1)]
 end
 export m2vecvec
 
