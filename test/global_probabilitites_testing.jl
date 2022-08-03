@@ -19,7 +19,7 @@ M1 = CPM(transitionprob = DINO(),opts=EstimandOpts(estimatedelta=true))
 δ = [δprior for i in 1:K]
 
 priorα = 0
-δ0prior =  initialdelta_init(M1.initialwvec, M1.varianceprior, priorα)
+δ0prior =  initialdelta_init(M1.initialwvec, M1.varianceprior, priorα, 0.2)
 δ0 = [params(δ0prior) for i in 1:K]
 δ0 = soa(δ0)
 δ = soa(δ)
@@ -74,3 +74,8 @@ using CDMrdata
     
     data = convertX(X)
   a = CARLA(M1,data, QMatrix, linesearch=BackTracking(stepsize=0.01))
+
+  ∇²risk(M1,data,QMatrix,QMatrix,θ)
+  vec(∇²riskαᵢ(M1, data[1], αMatrix,
+            QMatrix, QMatrix, θ, temperature))'
+            ∇²logpriors(M1,θ,1)

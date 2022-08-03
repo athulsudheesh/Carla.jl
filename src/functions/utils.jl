@@ -199,6 +199,29 @@ function param_init(M1::CPM, J,K)
 end
 export param_init
 
+
+function mypinvsym(symmatrix, number0)
+    thematrix = real(symmatrix*symmatrix') / 2
+    matrixinverse = pinv(symmatrix, atol = number0)
+    return matrixinverse
+end
+export mypinvsym
+
+
+function mycondnum(symmatrix, number0)
+    thematrix = real(symmatrix + symmatrix') /2
+    eigvalues = real(eigvals(thematrix))
+    maxeigenvalue = maximum(eigvalues)
+    mineigenvalue = minimum(eigvalues)
+
+    if (maxeigenvalue <= number0) || (abs(mineigenvalue) < number0)
+        conditionnumber = NaN
+    else 
+        conditionnumber = maxeigenvalue / mineigenvalue
+    end
+    return conditionnumber
+end
+export mycondnum
 #= Depreciated functions 
 """
     AllPatterns(k)

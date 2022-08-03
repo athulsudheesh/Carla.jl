@@ -128,7 +128,7 @@ function ∇risk(model::CPM, data, QMatrix, RMatrix, θ;e_strategy::Exact=Exact(
     all_patterns = AllPatterns(nrskills*nrtimepoints)'
     θvals = (β = θ.β.val, δ0 = θ.δ0.val, δ = θ.δ.val)
     paramdims = compute_paramdims(model, nritems, nrskills, nrtimepoints)
-    
+    Σmisscov = 0
     # Compute the gradient of the -ve normalized log-likelihood risk 
     gradavgmx = zeros(nrexaminees, paramdims)
     for i = 1:nrexaminees
@@ -148,12 +148,16 @@ function ∇risk(model::CPM, data, QMatrix, RMatrix, θ;e_strategy::Exact=Exact(
         wts = likelihoodcomplete / (eps() + sum(likelihoodcomplete))
         gradavg = gradcompletemx' * wts
         gradavgmx[i,:] = gradavg'
-        
+        weightedgradgradT = gradcompletemx' * diagm(wts)*gradcompletemx
+        opgmisscovi = weightedgradgradT - gradavg*gradavg'
+        Σmisscov = Σmisscov .+ opgmisscovi
     end
     gradmean = vec(mean(gradavgmx,dims=1))
-
+    opgmisscov = Σmisscov / nrexaminees
     # Add the gradient of the -ve log prior probablily term 
     ∇logθprior = all_∇logpriors(model, θ, nrtimepoints)
-    gradmean - (∇logθprior / nrexaminees)
+    MLgradmean = gradmean - (∇logθprior / nrexaminees)
+    riskgradmx = gradavgmx .- ∇logθprior'/ nrexaminees
+    return MLgradmean, riskgradmx', opgmisscov
 end
 export ∇risk

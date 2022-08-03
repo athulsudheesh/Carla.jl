@@ -120,8 +120,19 @@ function ∇²risk(model::CPM, data, QMatrix, RMatrix, θ, e_strategy)
     return complehessian 
 end
 
-function ∇²opgrisk(model::CPM, data, QMatrix, RMatrix, θ, e_strategy)
+function ∇²opgrisk(model::CPM, data, QMatrix, RMatrix, θ, e_strategy, convnumzero)
     completehessian =  ∇²risk(model::CPM, data, QMatrix, RMatrix, θ, e_strategy)
-    
+
+    riskgradient, riskgradmx, opgmisscov = ∇risk(model, data,QMatrix, RMatrix, θ, e_strategy = e_strategy)
+    Bmxdim, nrexaminees = size(riskgradmx)
+
+    BmxOPG = (riskgradmx*riskgradmx')/nrexaminees
+    AmxHess = completehessian - opgmisscov
+
+    convnumzero
+    invcompletehess = mypinvsym(completehessian, convnumzero)
+    eigmissinginfo = real(eigvals(invcompletehess*opgmisscov))
+    infofrac = maximum(eigmissinginfo)
+    return AmxHess, BmxOPG, completehessian, opgmisscov, infofrac, riskgradient
 end
-export ∇²riskαᵢ, ∇²risk
+export ∇²riskαᵢ, ∇²risk, ∇²opgrisk

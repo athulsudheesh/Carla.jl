@@ -6,14 +6,14 @@ Q = CSV.read("Fraction.Q.csv", DataFrame)
 Q = Matrix(Q[:,Not(:Column1)])
 using Revise
 using Carla
-M1 = CPM(varianceprior=1/100000)
+M1 = CPM(varianceprior=25/536)
 M1 = CPM()
 data = convertX(X)
 data = soa(data)
 nritems, nrskills = size(Q)
 θ = param_init(M1, nritems, nrskills)
 
-maprisk(M1,data,Q, nothing, θ)
+maprisk(M1,data,Q, nothing, θ)[1]
 
 θ.β.val .=  m2vecvec([
 [1.30401202029109 0.595994429671492];
@@ -39,6 +39,15 @@ maprisk(M1,data,Q, nothing, θ)
 -0.600000000000000;
 -0.600000000000000;
 -0.600000000000000])
-∇risk(M1,data,Q,nothing,θ)
+∇risk(M1,data,Q,nothing,a)
 batchdecent(M1,data,Q,nothing,θ,m_strategy = GradientDescent(),
      e_strategy=Exact(), linesearch=BackTracking(), learning = Batch())
+
+res = CARLA(M1, data,Q, learning = Batch(maxiteration=1000), m_strategy=LBFGS())
+
+h = ∇²risk(M1,data,Q,Q,a, Exact())
+∇²logpriors(M1, a, 1)
+a = [1, 0, 0, 1, 1]
+
+∇²riskαᵢ(M1,data[1], a, Q,Q, θ, 1)
+z = ∇²opgrisk(M1,data,Q,Q,a,Exact())

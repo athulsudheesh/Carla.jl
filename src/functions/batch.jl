@@ -44,7 +44,7 @@ function batchdecent(model::CPM, data,
     while keepgoing
         iteration = iteration + 1
 
-        gt = ∇risk(model, data, QMatrix, RMatrix, θ, e_strategy = e_strategy)
+        gt = ∇risk(model, data, QMatrix, RMatrix, θ, e_strategy = e_strategy)[1]
 
         dt, angulardeviation, innercycleid = autosearch(innercycleid,
             gt, gtlast, laststepsize,
