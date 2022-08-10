@@ -129,7 +129,7 @@ function ∇²opgrisk(model::CPM, data, QMatrix, RMatrix, θ, e_strategy, convnu
     BmxOPG = (riskgradmx*riskgradmx')/nrexaminees
     AmxHess = completehessian - opgmisscov
 
-    convnumzero
+
     invcompletehess = mypinvsym(completehessian, convnumzero)
     eigmissinginfo = real(eigvals(invcompletehess*opgmisscov))
     infofrac = maximum(eigmissinginfo)

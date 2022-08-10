@@ -4,7 +4,7 @@
 Implements a logistic signmoid function. Also 
 known as inverse logit in psychometric literature
 """
-sigmoid(x) = 1 ./ (1 .+ exp.(-x))
+sigmoid(x) = 1 ./ (1 .+ protected_exp.(-x))
 export sigmoid
 
 """

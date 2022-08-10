@@ -27,7 +27,7 @@ abstract type Learning end
 Base.@kwdef struct Batch <: Learning
     numerical0 = 1e-8
     maxdiffx = 1e-8
-    maxgradnorm = 0.0001
+    maxgradnorm = 0.001
     maxiteration = 50
 end
 export Batch
