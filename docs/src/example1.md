@@ -2,7 +2,7 @@
 
 To install the package 
 ```julia
-using Pkg; Pkg.add("https://github.com/athulsudheesh/Carla.jl")
+using Pkg; Pkg.add(url="https://github.com/athulsudheesh/Carla.jl")
 ```
 
 # Getting Data 
